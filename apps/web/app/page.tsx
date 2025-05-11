@@ -1,102 +1,101 @@
-import Image, { type ImageProps } from "next/image";
-import { Button } from "@repo/ui/button";
-import styles from "./page.module.css";
+import Image from "next/image";
+import { Card } from "@repo/ui/card";
+import { Gradient } from "@repo/ui/gradient";
+import { TurborepoLogo } from "@repo/ui/turborepo-logo";
+import TurborepoTextLogo from "./turborepo-text-logo";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+const LINKS = [
+  {
+    title: "Docs",
+    href: "https://turborepo.com/docs",
+    description: "Find in-depth information about Turborepo features and API.",
+  },
+  {
+    title: "Learn",
+    href: "https://turborepo.com/docs/handbook",
+    description: "Learn more about monorepos with our handbook.",
+  },
+  {
+    title: "Templates",
+    href: "https://turborepo.com/docs/getting-started/from-example",
+    description: "Choose from over 15 examples and deploy with a single click.",
+  },
+  {
+    title: "Deploy",
+    href: "https://vercel.com/new",
+    description:
+      "Instantly deploy your Turborepo to a shareable URL with Vercel.",
+  },
+];
 
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
+export default function Page() {
   return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
-
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/web/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
+    <main className="flex flex-col items-center justify-between min-h-screen p-24">
+      <div className="z-10 items-center justify-between w-full max-w-5xl font-mono text-sm lg:flex">
+        <p className="fixed top-0 left-0 flex justify-center w-full px-4 pt-8 pb-6 border backdrop-blur-2xl border-neutral-800 from-inherit lg:static lg:w-auto lg:rounded-xl lg:p-4">
+          examples/with-tailwind -&nbsp;
+          <code className="font-mono font-bold">web</code>
+        </p>
+        <div className="fixed bottom-0 left-0 flex items-end justify-center w-full h-48 lg:static lg:h-auto lg:w-auto">
           <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
-            target="_blank"
+            className="flex gap-2 p-8 pointer-events-none place-items-center lg:pointer-events-auto lg:p-0"
+            href="https://vercel.com?utm_source=create-turbo&utm_medium=basic&utm_campaign=create-turbo"
             rel="noopener noreferrer"
+            target="_blank"
           >
+            By{" "}
             <Image
-              className={styles.logo}
+              alt="Vercel Logo"
+              className="dark:invert"
+              height={24}
+              priority
               src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+              width={100}
             />
-            Deploy now
-          </a>
-          <a
-            href="https://turborepo.com/docs?utm_source"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
           </a>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+      </div>
+
+      <div className="relative flex place-items-center ">
+        <div className="font-sans w-auto pb-16 pt-[48px] md:pb-24 lg:pb-32 md:pt-16 lg:pt-20 flex justify-between gap-8 items-center flex-col relative z-0">
+          <div className="z-50 flex items-center justify-center w-full">
+            <div className="absolute min-w-[614px] min-h-[614px]">
+              <Image
+                alt="Turborepo"
+                height={614}
+                src="circles.svg"
+                width={614}
+              />
+            </div>
+            <div className="absolute z-50 flex items-center justify-center w-64 h-64">
+              <Gradient
+                className="opacity-90 w-[120px] h-[120px]"
+                conic
+                small
+              />
+            </div>
+
+            <div className="flex justify-center items-center z-50">
+              <TurborepoLogo />
+            </div>
+          </div>
+          <Gradient
+            className="top-[-500px] opacity-[0.15] w-[1000px] h-[1000px]"
+            conic
           />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to turborepo.com →
-        </a>
-      </footer>
-    </div>
+          <div className="z-50 flex flex-col items-center justify-center gap-5 px-6 text-center lg:gap-6">
+            <TurborepoTextLogo />
+          </div>
+        </div>
+      </div>
+
+      <div className="grid mb-32 text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
+        {LINKS.map(({ title, href, description }) => (
+          <Card href={href} key={title} title={title}>
+            {description}
+          </Card>
+        ))}
+      </div>
+    </main>
   );
 }
