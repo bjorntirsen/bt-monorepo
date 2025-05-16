@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "automerge": true,
+  "packageRules": [
+    {
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "matchUpdateTypes": ["patch", "pin"],
+      "groupName": "non-breaking updates"
+    },
+    {
+      "matchUpdateTypes": ["minor"],
+      "matchCurrentVersion": "!/^0/",
+      "groupName": "non-breaking updates"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "groupName": "breaking updates",
+      "automerge": false
+    },
+    {
+      "matchCurrentVersion": "/^0/",
+      "matchUpdateTypes": ["minor"],
+      "groupName": "breaking updates",
+      "automerge": false
+    },
+    {
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "groupName": "lockfile maintenance",
+      "schedule": ["* 4 * * 1"]
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions updates"
+    }
+  ]
+}
