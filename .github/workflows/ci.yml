@@ -21,8 +21,6 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - name: Setup pnpm cache
         id: cache
@@ -47,8 +45,6 @@ jobs:
           node-version: "22.15.1"
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - name: Restore dependencies
         run: pnpm install --frozen-lockfile
       - name: Run tests
@@ -65,8 +61,6 @@ jobs:
           node-version: "22.15.1"
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - name: Restore dependencies
         run: pnpm install --frozen-lockfile
       - name: Validate renovate.json
@@ -87,8 +81,6 @@ jobs:
           node-version: "22.15.1"
       - name: Install pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10
       - name: Restore dependencies
         run: pnpm install --frozen-lockfile
       - name: Type check
