@@ -8,7 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
@@ -22,7 +25,12 @@
     "@types/node": "^22.15.3",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.26.0",
-    "typescript": "5.8.2"
+    "jsdom": "^25.0.1",
+    "typescript": "5.8.2",
+    "vitest": "^2.1.8"
   }
 }
