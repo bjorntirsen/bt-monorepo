@@ -42,8 +42,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run all quality checks
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: |
           pnpm turbo run lint --continue
           pnpm turbo run format:check --continue
@@ -101,8 +99,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run unit tests
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: pnpm turbo run test --continue
 
   browser-tests:
@@ -146,8 +142,6 @@ jobs:
         run: pnpm cypress install --force
 
       - name: Run browser-based tests
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: pnpm turbo run test:browser-based --continue
 
       - name: Save Cypress binary cache
@@ -183,8 +177,6 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build
-        env:
-          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: pnpm turbo run build --continue
 
       - name: Upload build artifact
