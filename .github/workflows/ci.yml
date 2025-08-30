@@ -146,7 +146,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Ensure Cypress binary is installed
-        run: npx cypress install --force
+        working-directory: apps/web
+        env:
+          CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
+        run: pnpm cypress install --force
 
       - name: Restore Turbo cache
         id: turbo-cache
