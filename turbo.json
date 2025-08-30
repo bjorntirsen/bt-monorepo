@@ -12,6 +12,7 @@
     "check:types": {},
     "format": {},
     "format:check": {},
+    "test:browser-based": {},
     "dev": {
       "cache": false,
       "persistent": true

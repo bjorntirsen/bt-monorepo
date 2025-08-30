@@ -57,7 +57,7 @@ jobs:
         run: npx --yes --package renovate -- renovate-config-validator renovate.json
 
       - name: Run quality checks
-        run: pnpm turbo run lint format:check typecheck --cache-dir $TURBO_CACHE_DIR --continue
+        run: pnpm turbo run lint format:check check:types --cache-dir $TURBO_CACHE_DIR --continue
 
       - name: Save Turbo cache
         uses: actions/cache/save@v4
@@ -111,7 +111,7 @@ jobs:
           path: ${{ env.TURBO_CACHE_DIR }}
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
-  e2e:
+  browser-tests:
     needs: quality
     runs-on: ubuntu-latest
     steps:
@@ -146,8 +146,8 @@ jobs:
             ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-turbo-
 
-      - name: Run e2e tests
-        run: pnpm turbo run e2e --cache-dir $TURBO_CACHE_DIR --continue
+      - name: Run browser-based tests
+        run: pnpm turbo run test:browser-based --cache-dir $TURBO_CACHE_DIR --continue
 
       - name: Save Turbo cache
         uses: actions/cache/save@v4
@@ -157,7 +157,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
   build:
-    needs: [quality, unit, e2e]
+    needs: [quality, unit, browser-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
