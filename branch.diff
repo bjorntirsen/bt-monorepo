@@ -1,0 +1,219 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 049120c..7d09b82 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -6,82 +6,177 @@ on:
+   pull_request:
+     branches: [master]
+ 
++concurrency:
++  group: ci-${{ github.ref }}
++  cancel-in-progress: true
++
++env:
++  NODE_VERSION: "22.15.1"
++  TURBO_CACHE_DIR: .turbo
++  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
++
+ jobs:
+-  install:
++  quality: # lint + format:check + typecheck
+     runs-on: ubuntu-latest
+-    outputs:
+-      cache-hit: ${{ steps.cache.outputs.cache-hit }}
+     steps:
+       - uses: actions/checkout@v4
+ 
+-      - name: Setup Node.js
++      - name: Setup Node.js (with pnpm cache)
+         uses: actions/setup-node@v4
+         with:
+-          node-version: "22.15.1"
++          node-version: ${{ env.NODE_VERSION }}
++          cache: pnpm
+ 
+       - name: Install pnpm
+         uses: pnpm/action-setup@v4
+ 
+-      - name: Setup pnpm cache
+-        id: cache
++      - name: Install deps
++        run: pnpm install --frozen-lockfile
++
++      - name: Restore Turbo cache (fallback to remote cache)
+         uses: actions/cache@v4
+         with:
+-          path: ~/.pnpm-store
+-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+           restore-keys: |
+-            ${{ runner.os }}-pnpm-
++            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
++            ${{ runner.os }}-turbo-
+ 
+-      - name: Install dependencies
+-        run: pnpm install --frozen-lockfile
++      - name: Validate renovate.json
++        run: npx --yes --package renovate -- renovate-config-validator renovate.json
++
++      - name: Run quality checks
++        run: pnpm turbo run lint format:check typecheck --cache-dir $TURBO_CACHE_DIR --continue
++
++      - name: Save Turbo cache
++        uses: actions/cache/save@v4
++        if: always()
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+ 
+-  test:
+-    needs: install
++  unit:
++    needs: quality
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+-      - name: Setup Node.js
++
++      - name: Setup Node.js (with pnpm cache)
+         uses: actions/setup-node@v4
+         with:
+-          node-version: "22.15.1"
++          node-version: ${{ env.NODE_VERSION }}
++          cache: pnpm
++
+       - name: Install pnpm
+         uses: pnpm/action-setup@v4
+-      - name: Restore dependencies
++
++      - name: Install deps
+         run: pnpm install --frozen-lockfile
+-      - name: Run tests
+-        run: pnpm test
+ 
+-  lint:
+-    needs: install
++      - name: Restore Turbo cache
++        uses: actions/cache@v4
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
++          restore-keys: |
++            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
++            ${{ runner.os }}-turbo-
++
++      - name: Run unit tests
++        run: pnpm turbo run test --cache-dir $TURBO_CACHE_DIR --continue
++
++      - name: Save Turbo cache
++        uses: actions/cache/save@v4
++        if: always()
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
++
++  e2e:
++    needs: quality
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+-      - name: Setup Node.js
++
++      - name: Setup Node.js (with pnpm cache)
+         uses: actions/setup-node@v4
+         with:
+-          node-version: "22.15.1"
++          node-version: ${{ env.NODE_VERSION }}
++          cache: pnpm
++
+       - name: Install pnpm
+         uses: pnpm/action-setup@v4
+-      - name: Restore dependencies
++
++      - name: Install deps
+         run: pnpm install --frozen-lockfile
+-      - name: Validate renovate.json
+-        run: npx --yes --package renovate -- renovate-config-validator renovate.json
+-      - name: Run linting
+-        run: pnpm lint
+-      - name: Check formatting
+-        run: pnpm format:check
+ 
+-  typecheck:
+-    needs: install
++      - name: Restore Turbo cache
++        uses: actions/cache@v4
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
++          restore-keys: |
++            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
++            ${{ runner.os }}-turbo-
++
++      - name: Run e2e tests
++        run: pnpm turbo run e2e --cache-dir $TURBO_CACHE_DIR --continue
++
++      - name: Save Turbo cache
++        uses: actions/cache/save@v4
++        if: always()
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
++
++  build:
++    needs: [quality, unit, e2e]
+     runs-on: ubuntu-latest
+     steps:
+       - uses: actions/checkout@v4
+-      - name: Setup Node.js
++
++      - name: Setup Node.js (with pnpm cache)
+         uses: actions/setup-node@v4
+         with:
+-          node-version: "22.15.1"
++          node-version: ${{ env.NODE_VERSION }}
++          cache: pnpm
++
+       - name: Install pnpm
+         uses: pnpm/action-setup@v4
+-      - name: Restore dependencies
++
++      - name: Install deps
+         run: pnpm install --frozen-lockfile
+-      - name: Type check
+-        run: pnpm typecheck
++
++      - name: Restore Turbo cache
++        uses: actions/cache@v4
++        with:
++          path: ${{ env.TURBO_CACHE_DIR }}
++          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
++          restore-keys: |
++            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
++            ${{ runner.os }}-turbo-
++
++      - name: Build
++        run: pnpm turbo run build --cache-dir $TURBO_CACHE_DIR --continue
++
++      - name: Upload build artifact
++        uses: actions/upload-artifact@v4
++        with:
++          name: dist
++          path: |
++            apps/**/dist
++            packages/**/dist
++            !**/node_modules/**
++
++  deploy:
++    needs: build
++    runs-on: ubuntu-latest
++    if: github.ref == 'refs/heads/master'
++    steps:
++      - uses: actions/download-artifact@v4
++        with:
++          name: dist
++          path: dist
++
++      - name: Deploy
++        run: ./scripts/deploy.sh dist
