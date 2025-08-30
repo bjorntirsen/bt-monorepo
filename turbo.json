@@ -7,12 +7,75 @@
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"]
     },
-    "lint": {},
-    "test": {},
-    "check:types": {},
-    "format": {},
-    "format:check": {},
-    "test:browser-based": {},
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx}",
+        "**/*.{ts,tsx,js,jsx}",
+        "eslint.config.{js,mjs,ts}",
+        ".eslintrc.*",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "test": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx}",
+        "test/**/*.{ts,tsx,js,jsx}",
+        "**/*.test.{ts,tsx,js,jsx}",
+        "**/*.spec.{ts,tsx,js,jsx}",
+        "vitest.config.{ts,js}",
+        "setupVitest.ts",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": ["coverage/**", ".turbo/test-results/**"]
+    },
+    "check:types": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx}",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "format": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx,json,md}",
+        "**/*.{ts,tsx,js,jsx,json,md}",
+        ".prettierrc*",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "format:check": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx,json,md}",
+        "**/*.{ts,tsx,js,jsx,json,md}",
+        ".prettierrc*",
+        "package.json"
+      ],
+      "outputs": []
+    },
+    "test:browser-based": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "src/**/*.{ts,tsx,js,jsx}",
+        "cypress/**/*.{ts,js}",
+        "cypress.config.{ts,js}",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": [
+        "cypress/screenshots/**",
+        "cypress/videos/**",
+        ".turbo/cypress-results/**"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true
