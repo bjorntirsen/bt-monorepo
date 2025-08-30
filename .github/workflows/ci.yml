@@ -1,5 +1,9 @@
 name: CI
 
+# This CI pipeline uses Turborepo remote caching for optimal performance.
+# Remote caching is enabled via TURBO_TOKEN and TURBO_TEAM environment variables.
+# No local cache needed - Turborepo handles all caching automatically.
+
 on:
   push:
     branches: [master]
@@ -15,7 +19,6 @@ concurrency:
 
 env:
   NODE_VERSION: "22.15.1"
-  TURBO_CACHE_DIR: .turbo
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
   TURBO_TEAM: bjorntirsens-projects
 
@@ -43,28 +46,11 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Restore Turbo cache (fallback to remote cache)
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Validate renovate.json
         run: npx --yes --package renovate -- renovate-config-validator renovate.json
 
       - name: Run linting
-        run: pnpm turbo run lint --cache-dir $TURBO_CACHE_DIR --continue
-
-      - name: Save Turbo cache
-        uses: actions/cache/save@v4
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+        run: pnpm turbo run lint --continue
 
   format-check:
     runs-on: ubuntu-latest
@@ -89,28 +75,11 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Restore Turbo cache (fallback to remote cache)
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Validate renovate.json
         run: npx --yes --package renovate -- renovate-config-validator renovate.json
 
       - name: Run format check
-        run: pnpm turbo run format:check --cache-dir $TURBO_CACHE_DIR --continue
-
-      - name: Save Turbo cache
-        uses: actions/cache/save@v4
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+        run: pnpm turbo run format:check --continue
 
   type-check:
     runs-on: ubuntu-latest
@@ -135,28 +104,11 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Restore Turbo cache (fallback to remote cache)
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Validate renovate.json
         run: npx --yes --package renovate -- renovate-config-validator renovate.json
 
       - name: Run type checking
-        run: pnpm turbo run check:types --cache-dir $TURBO_CACHE_DIR --continue
-
-      - name: Save Turbo cache
-        uses: actions/cache/save@v4
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+        run: pnpm turbo run check:types --continue
 
   unit:
     needs: [lint, format-check, type-check]
@@ -183,25 +135,8 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Restore Turbo cache
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Run unit tests
-        run: pnpm turbo run test --cache-dir $TURBO_CACHE_DIR --continue
-
-      - name: Save Turbo cache
-        uses: actions/cache/save@v4
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+        run: pnpm turbo run test --continue
 
   browser-tests:
     needs: [lint, format-check, type-check]
@@ -243,18 +178,8 @@ jobs:
           CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
         run: pnpm cypress install --force
 
-      - name: Restore Turbo cache
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Run browser-based tests
-        run: pnpm turbo run test:browser-based --cache-dir $TURBO_CACHE_DIR --continue
+        run: pnpm turbo run test:browser-based --continue
 
       - name: Save Cypress binary cache
         if: steps.cypress-cache.outputs.cache-hit != 'true'
@@ -262,13 +187,6 @@ jobs:
         with:
           path: ~/.cache/Cypress
           key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Save Turbo cache
-        uses: actions/cache/save@v4
-        if: steps.turbo-cache.outputs.cache-hit != 'true'
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
   build:
     needs: [unit, browser-tests]
@@ -295,18 +213,8 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: Restore Turbo cache
-        id: turbo-cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.TURBO_CACHE_DIR }}
-          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-turbo-
-
       - name: Build
-        run: pnpm turbo run build --cache-dir $TURBO_CACHE_DIR --continue
+        run: pnpm turbo run build --continue
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

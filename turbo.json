@@ -30,7 +30,7 @@
         "tsconfig.json",
         "package.json"
       ],
-      "outputs": ["coverage/**", ".turbo/test-results/**"]
+      "outputs": []
     },
     "check:types": {
       "inputs": [
