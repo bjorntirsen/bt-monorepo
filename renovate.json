@@ -38,13 +38,7 @@
       "groupName": "GitHub Actions updates"
     },
     {
-      "matchManagers": [
-        "nvm",
-        "node-version",
-        "asdf",
-        "volta",
-        "github-actions"
-      ],
+      "matchManagers": ["nvm", "node", "asdf", "volta", "github-actions"],
       "matchPackageNames": ["node", "actions/setup-node"],
       "versioning": "node",
       "allowedVersions": "<23"
