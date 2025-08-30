@@ -133,8 +133,20 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
 
+      - name: Restore Cypress binary cache
+        id: cypress-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-cypress-
+
       - name: Install deps
         run: pnpm install --frozen-lockfile
+
+      - name: Ensure Cypress binary is installed
+        run: npx cypress install --force
 
       - name: Restore Turbo cache
         id: turbo-cache
@@ -148,6 +160,13 @@ jobs:
 
       - name: Run browser-based tests
         run: pnpm turbo run test:browser-based --cache-dir $TURBO_CACHE_DIR --continue
+
+      - name: Save Cypress binary cache
+        if: steps.cypress-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ~/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Save Turbo cache
         uses: actions/cache/save@v4
