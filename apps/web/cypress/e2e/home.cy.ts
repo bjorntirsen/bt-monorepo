@@ -24,11 +24,11 @@ describe("Home Page", () => {
     cy.get("footer").should("exist");
     cy.get("footer a[href*='turborepo.com']").should(
       "contain",
-      "Go to turborepo.com"
+      "Go to turborepo.com",
     );
     cy.get("footer a[href*='vercel.com/templates']").should(
       "contain",
-      "Examples"
+      "Examples",
     );
   });
 
