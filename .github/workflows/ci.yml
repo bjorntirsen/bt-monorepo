@@ -17,7 +17,7 @@ env:
   NODE_VERSION: "22.15.1"
   TURBO_CACHE_DIR: .turbo
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-  # TURBO_TEAM: your-team-slug   # uncomment if using a Vercel Team
+  TURBO_TEAM: bjorntirsens-projects
 
 jobs:
   quality: # lint + format:check + typecheck

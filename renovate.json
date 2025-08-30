@@ -1,5 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["workarounds:typesNodeVersioning"],
+  "schedule": ["* * * * 1"],
   "automerge": true,
   "packageRules": [
     {
@@ -34,6 +36,30 @@
     {
       "matchManagers": ["github-actions"],
       "groupName": "GitHub Actions updates"
+    },
+    {
+      "matchManagers": [
+        "nvm",
+        "node-version",
+        "asdf",
+        "volta",
+        "github-actions"
+      ],
+      "matchPackageNames": ["node", "actions/setup-node"],
+      "versioning": "node",
+      "allowedVersions": "<23"
+    },
+    {
+      "matchManagers": ["dockerfile"],
+      "matchPackageNames": ["node"],
+      "versioning": "node",
+      "allowedVersions": "<23"
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["@types/node"],
+      "versioning": "node",
+      "allowedVersions": "<23"
     }
   ]
 }
