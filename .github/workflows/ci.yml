@@ -20,7 +20,7 @@ env:
   TURBO_TEAM: bjorntirsens-projects
 
 jobs:
-  quality: # lint + format:check + typecheck
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -56,8 +56,100 @@ jobs:
       - name: Validate renovate.json
         run: npx --yes --package renovate -- renovate-config-validator renovate.json
 
-      - name: Run quality checks
-        run: pnpm turbo run lint format:check check:types --cache-dir $TURBO_CACHE_DIR --continue
+      - name: Run linting
+        run: pnpm turbo run lint --cache-dir $TURBO_CACHE_DIR --continue
+
+      - name: Save Turbo cache
+        uses: actions/cache/save@v4
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+
+  format-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get pnpm version from package.json
+        id: pnpmv
+        run: echo "PNPM_VERSION=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_ENV
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Restore Turbo cache (fallback to remote cache)
+        id: turbo-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-turbo-
+
+      - name: Validate renovate.json
+        run: npx --yes --package renovate -- renovate-config-validator renovate.json
+
+      - name: Run format check
+        run: pnpm turbo run format:check --cache-dir $TURBO_CACHE_DIR --continue
+
+      - name: Save Turbo cache
+        uses: actions/cache/save@v4
+        if: steps.turbo-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Get pnpm version from package.json
+        id: pnpmv
+        run: echo "PNPM_VERSION=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_ENV
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          run_install: false
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Restore Turbo cache (fallback to remote cache)
+        id: turbo-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TURBO_CACHE_DIR }}
+          key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-turbo-
+
+      - name: Validate renovate.json
+        run: npx --yes --package renovate -- renovate-config-validator renovate.json
+
+      - name: Run type checking
+        run: pnpm turbo run check:types --cache-dir $TURBO_CACHE_DIR --continue
 
       - name: Save Turbo cache
         uses: actions/cache/save@v4
@@ -67,7 +159,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
   unit:
-    needs: quality
+    needs: [lint, format-check, type-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,7 +204,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
   browser-tests:
-    needs: quality
+    needs: [lint, format-check, type-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -179,7 +271,7 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ hashFiles('**/turbo.json','**/pnpm-lock.yaml') }}-${{ github.sha }}
 
   build:
-    needs: [quality, unit, browser-tests]
+    needs: [unit, browser-tests]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
