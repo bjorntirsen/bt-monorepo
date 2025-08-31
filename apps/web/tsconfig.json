@@ -10,5 +10,6 @@
     ".next/types/**/*.ts",
     "vitest.config.ts",
     "setupVitest.ts"
-  ]
+  ],
+  "exclude": ["node_modules"]
 }
