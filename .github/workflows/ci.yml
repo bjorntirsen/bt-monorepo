@@ -166,6 +166,7 @@ jobs:
         with:
           name: dist
           path: |
+            apps/**/.next
             apps/**/dist
             packages/**/dist
             !**/node_modules/**
