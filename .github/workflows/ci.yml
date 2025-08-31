@@ -161,6 +161,28 @@ jobs:
       - name: Build
         run: pnpm turbo run build --continue
 
+      - name: Verify build completion
+        run: |
+          echo "=== Turbo build status ==="
+          pnpm turbo run build --dry-run
+          echo "=== Build cache status ==="
+          pnpm turbo run build --dry-run --remote-only
+
+      - name: Debug - List build outputs
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== Listing apps directory ==="
+          ls -la apps/
+          echo "=== Listing web app directory ==="
+          ls -la apps/web/
+          echo "=== Listing docs app directory ==="
+          ls -la apps/docs/
+          echo "=== Checking for .next folders ==="
+          find . -name ".next" -type d 2>/dev/null || echo "No .next folders found"
+          echo "=== Checking for dist folders ==="
+          find . -name "dist" -type d 2>/dev/null || echo "No dist folders found"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
