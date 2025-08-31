@@ -188,9 +188,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: |
-            apps/web/.next/
-            apps/docs/.next/
+          path: apps/*/.next
 
   deploy:
     needs: [build, validate-renovate]
