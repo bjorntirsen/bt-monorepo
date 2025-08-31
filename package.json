@@ -30,7 +30,7 @@
     "lint-staged": "^16.1.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "packageManager": "pnpm@10.15.0"
 }
