@@ -2,15 +2,15 @@
 
 This is supposed to resemble a corporate web platform with a secure, public, identity provider as well as a design system. Eventually...
 
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=bugs)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=bt-monorepo&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=bt-monorepo)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=bugs)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=bjorntirsen_bt-monorepo&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=bjorntirsen_bt-monorepo)
 
 ## Quickstart
 
