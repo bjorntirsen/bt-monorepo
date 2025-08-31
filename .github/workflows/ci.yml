@@ -188,10 +188,10 @@ jobs:
         with:
           name: dist
           path: |
-            apps/**/.next
-            apps/**/dist
-            packages/**/dist
-            !**/node_modules/**
+            apps/web/.next
+            apps/docs/.next
+            apps/*/dist
+            packages/*/dist
 
   deploy:
     needs: [build, validate-renovate]
