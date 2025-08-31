@@ -1,22 +1,14 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
-  "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  },
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
     "next-env.d.ts",
     "next.config.js",
     ".next/types/**/*.ts",
     "vitest.config.ts",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
-    "src/test/setup.tsx"
-  ],
-  "exclude": ["node_modules"]
+    "setupVitest.ts"
+  ]
 }
