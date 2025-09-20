@@ -3,35 +3,24 @@
   "extends": ["workarounds:typesNodeVersioning"],
   "schedule": ["* * * * 1"],
   "automerge": true,
+  "automergeType": "pr",
+  "minimumReleaseAge": "3 days",
+  "prHourlyLimit": 4,
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "schedule": ["before 5am on monday"]
+  },
   "packageRules": [
     {
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days"
     },
     {
-      "matchUpdateTypes": ["patch", "pin"],
-      "groupName": "non-breaking updates"
-    },
-    {
-      "matchUpdateTypes": ["minor"],
+      "matchUpdateTypes": ["patch", "pin", "minor"],
       "matchCurrentVersion": "!/^0/",
       "groupName": "non-breaking updates"
-    },
-    {
-      "matchUpdateTypes": ["major"],
-      "groupName": "breaking updates",
-      "automerge": false
-    },
-    {
-      "matchCurrentVersion": "/^0/",
-      "matchUpdateTypes": ["minor"],
-      "groupName": "breaking updates",
-      "automerge": false
-    },
-    {
-      "matchUpdateTypes": ["lockFileMaintenance"],
-      "groupName": "lockfile maintenance",
-      "schedule": ["* 4 * * 1"]
     },
     {
       "matchManagers": ["github-actions"],
