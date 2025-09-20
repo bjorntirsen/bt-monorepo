@@ -14,73 +14,69 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: "22"
   TURBO_TEAM: bjorntirsens-projects
   TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 
 jobs:
+  validate-renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version-file: ".nvmrc"
+      - name: Validate renovate.json
+        run: npx --yes --package renovate -- renovate-config-validator renovate.json --strict
+
   quality-checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4.0.0
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
+          node-version-file: ".nvmrc"
+      - name: Debug after setup-node
+        run: |
+          echo "node:" $(node -v)
+          echo "npm:" $(npm -v)
+          which pnpm || echo "pnpm not installed yet"
       - name: Get pnpm version from package.json
         id: pnpmv
         run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
-
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: ${{ steps.pnpmv.outputs.version }}
           run_install: false
-
       - name: Install deps
         run: pnpm install --frozen-lockfile
-
       - name: Run all quality checks
         run: |
           pnpm turbo run lint --continue
           pnpm turbo run format:check --continue
           pnpm turbo run check:types --continue
 
-  validate-renovate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Validate renovate.json
-        run: npx -p renovate -c 'renovate-config-validator renovate.json --strict' -y
-
   unit:
     needs: [quality-checks]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version-file: ".nvmrc"
       - name: Get pnpm version from package.json
         id: pnpmv
         run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
-
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: ${{ steps.pnpmv.outputs.version }}
           run_install: false
-
-      - name: Setup Node.js (with pnpm cache)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
       - name: Install deps
         run: pnpm install --frozen-lockfile
-
       - name: Run unit tests
         run: pnpm turbo run test --continue
 
@@ -89,23 +85,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version-file: ".nvmrc"
       - name: Get pnpm version from package.json
         id: pnpmv
         run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
-
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: ${{ steps.pnpmv.outputs.version }}
           run_install: false
-
-      - name: Setup Node.js (with pnpm cache)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
       - name: Restore Cypress binary cache
         id: cypress-cache
         uses: actions/cache@v4
@@ -114,19 +105,15 @@ jobs:
           key: ${{ runner.os }}-cypress-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-cypress-
-
       - name: Install deps
         run: pnpm install --frozen-lockfile
-
       - name: Ensure Cypress binary is installed
         working-directory: apps/web
         env:
           CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
         run: pnpm cypress install --force
-
       - name: Run browser-based tests
         run: pnpm turbo run test:browser-based --continue
-
       - name: Save Cypress binary cache
         if: steps.cypress-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
@@ -139,29 +126,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version-file: ".nvmrc"
       - name: Get pnpm version from package.json
         id: pnpmv
         run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
-
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
         with:
           version: ${{ steps.pnpmv.outputs.version }}
           run_install: false
-
-      - name: Setup Node.js (with pnpm cache)
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
       - name: Install deps
         run: pnpm install --frozen-lockfile
-
       - name: Build
         run: pnpm turbo run build --continue
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -173,5 +153,18 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
+      - uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.0
+        with:
+          node-version-file: ".nvmrc"
+      - name: Get pnpm version from package.json
+        id: pnpmv
+        run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
+      - name: Install pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+        with:
+          version: ${{ steps.pnpmv.outputs.version }}
+          run_install: false
       - name: Deploy
         run: echo "🚀 Deploy handled by Vercel - pushing to master automatically triggers deployment"
