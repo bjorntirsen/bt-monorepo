@@ -37,6 +37,11 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version-file: ".nvmrc"
+      - name: Debug after setup-node
+        run: |
+          echo "node:" $(node -v)
+          echo "npm:" $(npm -v)
+          which pnpm || echo "pnpm not installed yet"
       - name: Get pnpm version from package.json
         id: pnpmv
         run: echo "version=$(jq -r '.packageManager' package.json | cut -d'@' -f2)" >> $GITHUB_OUTPUT
