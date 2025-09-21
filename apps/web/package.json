@@ -20,25 +20,25 @@
   },
   "dependencies": {
     "@repo/ui": "workspace:*",
-    "next": "^15.3.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@cypress/react": "^9.0.1",
+    "@cypress/react": "catalog:",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.1.0",
-    "@types/node": "^22.15.3",
-    "@types/react": "19.1.12",
-    "@types/react-dom": "19.1.9",
-    "@vitejs/plugin-react": "^5.0.0",
-    "cypress": "^15.0.0",
-    "eslint": "^9.26.0",
-    "jsdom": "^26.0.0",
-    "start-server-and-test": "^2.0.13",
-    "typescript": "5.9.2",
-    "vitest": "^3.0.0"
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "cypress": "catalog:",
+    "eslint": "catalog:",
+    "jsdom": "catalog:",
+    "start-server-and-test": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
