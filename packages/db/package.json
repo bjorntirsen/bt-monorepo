@@ -1,0 +1,26 @@
+{
+  "name": "@repo/db",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "migrate:sqlite:generate": "drizzle-kit generate --config=drizzle.config.sqlite.ts",
+    "migrate:sqlite:push": "drizzle-kit push --config=drizzle.config.sqlite.ts",
+    "migrate:pg:generate": "drizzle-kit generate --config=drizzle.config.pg.ts",
+    "migrate:pg:push": "drizzle-kit push --config=drizzle.config.pg.ts"
+  },
+  "dependencies": {
+    "@libsql/client": "catalog:",
+    "@repo/env-config": "workspace:*",
+    "better-sqlite3": "catalog:",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "catalog:",
+    "@types/pg": "catalog:",
+    "drizzle-kit": "catalog:",
+    "tsx": "catalog:"
+  }
+}

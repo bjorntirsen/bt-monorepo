@@ -1,29 +1,27 @@
 {
-  "name": "docs",
+  "name": "idp",
   "version": "0.1.0",
-  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 3001",
-    "build": "next build",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint",
-    "check-types": "tsc --noEmit"
+    "lint": "eslint"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
+    "typescript": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "tailwindcss": "catalog:",
     "eslint": "catalog:",
     "eslint-config-next": "catalog:",
-    "@eslint/eslintrc": "catalog:",
-    "typescript": "catalog:"
+    "@eslint/eslintrc": "catalog:"
   }
 }
