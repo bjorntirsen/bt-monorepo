@@ -16,14 +16,9 @@ const ThemeImage = (props: Props) => {
         {...rest}
         src={srcLight}
         className="imgLight"
-        alt="Light theme illustration"
+        alt="Turborepo logo"
       />
-      <Image
-        {...rest}
-        src={srcDark}
-        className="imgDark"
-        alt="Dark theme illustration"
-      />
+      <Image {...rest} src={srcDark} className="imgDark" alt="Turborepo logo" />
     </>
   );
 };
