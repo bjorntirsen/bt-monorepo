@@ -10,7 +10,7 @@ A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a T
 - **Persistence layer (SQLite local + Supabase Postgres prod):**
   - **Chosen:** Drizzle ORM (lightweight, TS-native, SQL-first).
   - ⚠️ Note: Requires maintaining `sqliteTable` and `pgTable` definitions separately, but queries can stay shared.
-- **Runtime/stack:** Node.js + Express backend; Vite + React frontend(s).
+- **Runtime/stack:** Next.js (backend + login/consent frontend) and a separate Vite + React SPA (admin dashboard).
 - **Repo:** Turborepo monorepo with `apps/*` and `packages/*`, all TypeScript.
 
 ---
@@ -19,21 +19,20 @@ A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a T
 
 ```text
 ├─ apps/
-│ ├─ auth-server/ # Express host + oidc-provider + adapters
-│ ├─ web/ # End-user login/consent UI (Vite/React)
-│ └─ admin/ # Admin console (Vite/React)
+│ ├─ idp/         # Next.js app with oidc-provider + login/consent UI
+│ └─ admin/       # Vite SPA (admin dashboard)
 ├─ packages/
-│ ├─ db/ # Drizzle schemas & query layer
-│ ├─ core-auth/ # Domain logic (users, sessions, MFA)
-│ ├─ ui/ # Shared UI components
-│ ├─ config/ # Env loader (zod-validated)
-│ ├─ types/ # Shared TS types
-│ └─ tooling/ # ESLint, tsconfig, vitest utils
+│ ├─ db/          # Drizzle schemas & query layer
+│ ├─ core-auth/   # Domain logic (users, sessions, MFA)
+│ ├─ ui/          # Shared UI components
+│ ├─ config/      # Env loader (zod-validated)
+│ ├─ types/       # Shared TS types
+│ └─ tooling/     # ESLint, tsconfig, vitest utils
 ```
 
 ---
 
-the db packages could later be expanded into:
+## Optional DB Package Structure
 
 ```text
 packages/db/
@@ -53,27 +52,33 @@ packages/db/
   - Create `sqliteTable` definitions for local dev (`file:./dev.db`).
   - Create `pgTable` definitions for Supabase Postgres.
   - Use drizzle-kit to generate and run migrations.
-- Skeleton `apps/auth-server` with Express.
+- Skeleton `apps/idp` with Next.js.
 
 ### M1 — Minimal Local Auth (Session-based)
 
 - Implement `core-auth`: users, password hashing (argon2), email verification tokens.
 - Dev email transport (console).
-- `apps/web` login/register/verify UI.
+- `apps/idp` login/register/verify UI.
 - Cookie sessions or sessions table.
 - E2E tests for login/register/logout.
 
 ### M2 — Add `oidc-provider`
 
-- Integrate into `auth-server` with issuer config.
+- Integrate into `apps/idp` API routes with issuer config.
 - Support `authorization_code + PKCE`, `refresh_token`.
 - Implement **Drizzle Adapter** for tokens, sessions, and clients:
   - Use Drizzle to persist authorization codes, access tokens, refresh tokens, sessions, and client definitions.
   - Create a common adapter interface so the same logic works across SQLite (local) and Postgres (Supabase).
 - Interaction flows:
-  - Redirect to `apps/web` login if unauthenticated.
+  - Redirect to `apps/idp` login if unauthenticated.
   - Consent screen for scopes.
 - Expose JWKS endpoint.
+- Ensure OIDC API routes run on the Node.js runtime (not Edge) in Next.js:
+  ```ts
+  export const runtime = "nodejs";
+  export const dynamic = "force-dynamic";
+  ```
+- Make sure `/.well-known/openid-configuration` and `/jwks.json` are served via the [...route] handler
 
 ### M3 — OAuth 2.1 Compliance
 
@@ -142,90 +147,75 @@ export const users = pgTable("users", {
 });
 ```
 
-Create a unified query API in packages/db/client that loads the right dialect at runtime based on env.
+- Create a unified query API in `packages/db/client` that loads the right dialect at runtime based on env
+- Prefer column types and constraints supported by both SQLite & Postgres to maximize portability
+- Run CI tests against both SQLite and Postgres (via Supabase or testcontainers)
 
-Run CI tests against both SQLite and Postgres (via Supabase or testcontainers).
-
-Use types portable between SQLite & Postgres.
-
-Run CI tests on both DBs (SQLite + Postgres).
-
-## Auth Server Structure
+## IDP App Structure (Next.js)
 
 ```text
-apps/auth-server/src/
-├─ index.ts # express bootstrap
-├─ provider.ts # new Provider(issuer, configuration)
-├─ adapter/DrizzleAdapter.ts
-├─ routes/
-│ ├─ health.ts
-│ ├─ interaction.ts # login, consent
-│ └─ admin.ts # admin API
-└─ services/
-├─ users.ts
-├─ mfa.ts
-└─ email.ts
+apps/idp/
+├─ app/
+│  ├─ login/             # login page
+│  ├─ consent/           # consent page
+│  └─ api/
+│     ├─ oidc/[...route] # oidc-provider endpoints
+│     └─ admin/          # admin API endpoints
+├─ lib/
+│  ├─ provider.ts        # new Provider(issuer, configuration)
+│  ├─ adapter/DrizzleAdapter.ts
+│  └─ services/
+│     ├─ users.ts
+│     ├─ mfa.ts
+│     └─ email.ts
 ```
 
-## Frontends (Vite + React)
+## Frontends
 
-apps/web
-
-/login, /register, /verify-email, /forgot, /mfa, /consent.
-
-## Interaction flows with oidc-provider.
-
-apps/admin
-
-## Auth gate + RBAC.
-
-Clients CRUD, User management, Audit events.
+- **apps/idp (Next.js)**
+  - Routes: `/login`, `/register`, `/verify-email`, `/forgot`, `/mfa`, `/consent`
+  - Handles login, consent, and all OIDC interaction flows
+- **apps/admin (Vite SPA)**
+  - Admin dashboard (CRUD for clients/users, audit logs, RBAC)
+  - Auth gate + RBAC for admin users
+  - Consumes APIs exposed from `apps/idp`
+  - Add a `vercel.json` with a rewrite so SPA routes resolve to `index.html`:
+    ```json
+    {
+      "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+    }
+    ```
 
 ## Security & Crypto
 
-Use jose for JWKs, signing, verification.
-
-Rotate keys regularly; expose via JWKS endpoint.
-
-## Argon2id for password hashing.
-
-Strict redirect URI matching.
-
-## CSRF protection on forms.
-
-Tight CORS config.
+- Use jose for JWKs, signing, verification
+- Rotate keys regularly; expose via JWKS endpoint
+- Argon2id for password hashing
+- Strict redirect URI matching
+- CSRF protection on forms
+- Tight CORS config
+- Cookies: `Secure` in prod, `SameSite=Lax` (or `None` if cross-site), and set `domain` if sharing across subdomains
+- Use cookies only for IDP user sessions (login/consent flows); use Bearer tokens for admin API access
 
 ## Testing Strategy
 
 - Unit: core-auth logic.
-
-- Integration: auth-server endpoints with Supertest.
-
+- Integration: idp (Next.js) API routes with Supertest.
 - E2E: Playwright for auth flows.
-
 - DB matrix in CI: run tests on SQLite & Postgres.
 
 ## OAuth 2.1 Compliance Checklist
 
-Authorization Code + PKCE only.
-
-No Implicit.
-
-Refresh token rotation.
-
-Redirect URI strict matching.
-
-Scope consent UX.
-
-Offline access for refresh.
-
-JWKS endpoint + rotation.
-
-Token revocation & introspection.
-
-Well-known metadata.
-
-MFA for sensitive scopes.
+- [ ] Authorization Code + PKCE only
+- [ ] Disallow implicit/hybrid flows
+- [ ] Refresh token rotation
+- [ ] Redirect URI strict matching
+- [ ] Scope consent UX
+- [ ] Offline access for refresh
+- [ ] JWKS endpoint + rotation
+- [ ] Token revocation & introspection
+- [ ] Well-known metadata
+- [ ] MFA for sensitive scopes
 
 ## Example ENV
 
@@ -237,6 +227,8 @@ DATABASE_URL=file:./dev.db
 ISSUER=http://localhost:3000
 COOKIE_SECRET=...
 SMTP_URL=console://
+IDP_PUBLIC_URL=https://idp.example.com
+ADMIN_PUBLIC_URL=https://admin.example.com
 ```
 
 ### Prod (Supabase)
@@ -248,28 +240,23 @@ ISSUER=https://auth.example.com
 COOKIE_SECRET=...
 SMTP_URL=...
 TRUST_PROXY=1
+IDP_PUBLIC_URL=https://idp.example.com
+ADMIN_PUBLIC_URL=https://admin.example.com
 ```
 
 ## CI/CD Notes
 
-Build via turbo run build.
-
-Deploy auth-server as Docker image.
-
-- Run drizzle-kit migrate on release.
-
-Test matrix across SQLite + Postgres.
+- Build with `turbo run build`
+- Deploy `apps/idp` (Next.js) — for example as a Docker image or directly on Vercel/Fly.io
+- Run `drizzle-kit migrate` on release to keep the database schema in sync
+- In CI, run the test matrix against both SQLite and Postgres (e.g. Supabase or testcontainers)
+- When deploying to Vercel serverless, use the Supabase Pooler DSN (port `6543`) to avoid exhausting database connections
 
 ## TL;DR Next Steps
 
 - Setup packages/db with Drizzle (sqliteTable + pgTable).
-
-- Express + oidc-provider in auth-server.
-
-- Vite login/consent UI.
-
+- Next.js + oidc-provider in `apps/idp`.
+- Next.js login/consent UI.
 - Get OAuth Code+PKCE flow working end-to-end.
-
 - Apply migrations to Supabase.
-
 - Add Admin app, MFA, and OAuth 2.1 refinements.
