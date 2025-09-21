@@ -1,13 +1,19 @@
 /// <reference types="cypress" />
 
-// Add custom commands here
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      // Add custom command types here if needed
+      /**
+       * Get element by data-cy attribute
+       * @param {string} selector - data-cy selector
+       * @example cy.getByCy('submit-button')
+       */
+      getByCy(selector: string): Chainable<JQuery<HTMLElement>>;
     }
   }
 }
 
-// Example custom command
-// Cypress.Commands.add('login', (email, password) => { ... })
+Cypress.Commands.add("getByCy", (selector: string) => {
+  return cy.get(`[data-cy=${selector}]`);
+});

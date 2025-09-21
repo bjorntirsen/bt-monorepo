@@ -7,7 +7,7 @@
     "dev": "next dev --turbopack --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint --max-warnings 0",
+    "lint": "eslint",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,12 +17,13 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "eslint": "catalog:",
+    "eslint-config-next": "catalog:",
+    "@eslint/eslintrc": "catalog:",
     "typescript": "catalog:"
   }
 }
