@@ -36,9 +36,9 @@ A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a T
 
 ```text
 packages/db/
-├─ sqlite/ # sqliteTable definitions + migrations
-├─ pg/ # pgTable definitions + migrations
-└─ client/ # unified repo API that picks the correct dialect
+├─ sqlite/        # sqliteTable definitions + migrations
+├─ pg/            # pgTable definitions + migrations
+└─ client/        # unified repo API that picks the correct dialect
 ```
 
 ---
