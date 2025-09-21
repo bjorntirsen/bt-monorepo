@@ -23,6 +23,9 @@
     ]
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@eslint/js": "catalog:",
+    "eslint": "catalog:",
     "husky": "catalog:",
     "lint-staged": "catalog:",
     "prettier": "catalog:",

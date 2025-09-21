@@ -44,3 +44,19 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 [ ] create a fastify idp bff with a fake backend
 [ ] link them together
 [ ] create design system
+
+## DB workflow
+
+### For local dev (SQLite):
+
+```
+pnpm --filter @repo/db migrate:sqlite:generate
+pnpm --filter @repo/db migrate:sqlite:push
+```
+
+### For production (Supabase Postgres):
+
+```
+pnpm --filter @repo/db migrate:pg:generate
+pnpm --filter @repo/db migrate:pg:push
+```
