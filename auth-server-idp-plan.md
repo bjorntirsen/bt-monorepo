@@ -6,7 +6,7 @@ A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a T
 
 ## High-Level Approach
 
-- **Auth core:** [`oidc-provider`](https://github.com/panva/node-oidc-provider) for OAuth 2.1 compliance.
+- **Auth core:** Custom OAuth 2.1 / OIDC implementation (all endpoints built in-house with TypeScript + jose).
 - **Persistence layer (SQLite local + Supabase Postgres prod):**
   - **Chosen:** Drizzle ORM (lightweight, TS-native, SQL-first).
   - ⚠️ Note: Requires maintaining `sqliteTable` and `pgTable` definitions separately, but queries can stay shared.
@@ -19,7 +19,7 @@ A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a T
 
 ```text
 ├─ apps/
-│ ├─ idp/         # Next.js app with oidc-provider + login/consent UI
+│ ├─ idp/         # Next.js app with custom OAuth2.1/OIDC server + login/consent UI
 │ └─ admin/       # Vite SPA (admin dashboard)
 ├─ packages/
 │ ├─ db/          # Drizzle schemas & query layer
@@ -62,23 +62,19 @@ packages/db/
 - Cookie sessions or sessions table.
 - E2E tests for login/register/logout.
 
-### M2 — Add `oidc-provider`
+### M2 — Add OAuth2.1 / OIDC Endpoints (Custom Implementation)
 
-- Integrate into `apps/idp` API routes with issuer config.
-- Support `authorization_code + PKCE`, `refresh_token`.
-- Implement **Drizzle Adapter** for tokens, sessions, and clients:
-  - Use Drizzle to persist authorization codes, access tokens, refresh tokens, sessions, and client definitions.
-  - Create a common adapter interface so the same logic works across SQLite (local) and Postgres (Supabase).
-- Interaction flows:
-  - Redirect to `apps/idp` login if unauthenticated.
-  - Consent screen for scopes.
-- Expose JWKS endpoint.
-- Ensure OIDC API routes run on the Node.js runtime (not Edge) in Next.js:
-  ```ts
-  export const runtime = "nodejs";
-  export const dynamic = "force-dynamic";
-  ```
-- Make sure `/.well-known/openid-configuration` and `/jwks.json` are served via the [...route] handler
+- Implement core OAuth2.1 endpoints:
+  - `/authorize` → handles auth requests with PKCE, redirects with code
+  - `/token` → exchanges code for tokens, issues refresh + access + (optional) ID token
+  - `/userinfo` → returns claims about the authenticated user
+  - `/jwks.json` → expose JSON Web Key Set for verifying signatures
+  - `/.well-known/openid-configuration` → discovery metadata
+- Implement refresh token rotation and replay detection
+- Persist authorization codes, tokens, and sessions in Drizzle
+- Issue and verify JWTs (ID tokens, access tokens) with `jose`
+- Build consent flow UI in `apps/idp`
+- Hard-fail on disallowed grant types (no implicit/hybrid flows)
 
 ### M3 — OAuth 2.1 Compliance
 
@@ -159,8 +155,11 @@ apps/idp/
 │  ├─ login/             # login page
 │  ├─ consent/           # consent page
 │  └─ api/
-│     ├─ oidc/[...route] # oidc-provider endpoints
-│     └─ admin/          # admin API endpoints
+│     ├─ authorize/       # /authorize endpoint
+│     ├─ token/           # /token endpoint
+│     ├─ userinfo/        # /userinfo endpoint
+│     ├─ jwks.json/       # JWKS endpoint
+│     └─ well-known/      # /.well-known/openid-configuration
 ├─ lib/
 │  ├─ provider.ts        # new Provider(issuer, configuration)
 │  ├─ adapter/DrizzleAdapter.ts
@@ -196,6 +195,7 @@ apps/idp/
 - Tight CORS config
 - Cookies: `Secure` in prod, `SameSite=Lax` (or `None` if cross-site), and set `domain` if sharing across subdomains
 - Use cookies only for IDP user sessions (login/consent flows); use Bearer tokens for admin API access
+- Validate PKCE verifiers, client authentication, scopes, and all OAuth2.1/OIDC request parameters according to the spec
 
 ## Testing Strategy
 
@@ -255,7 +255,7 @@ ADMIN_PUBLIC_URL=https://admin.example.com
 ## TL;DR Next Steps
 
 - Setup packages/db with Drizzle (sqliteTable + pgTable).
-- Next.js + oidc-provider in `apps/idp`.
+- Next.js + custom OAuth2.1/OIDC implementation in `apps/idp`.
 - Next.js login/consent UI.
 - Get OAuth Code+PKCE flow working end-to-end.
 - Apply migrations to Supabase.
