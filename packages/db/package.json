@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "migrate:sqlite:generate": "drizzle-kit generate --config=drizzle.config.sqlite.ts",
-    "migrate:sqlite:push": "drizzle-kit push --config=drizzle.config.sqlite.ts",
+    "migrate:sqlite:push": "DATABASE_URL=file:./sqlite/local.db drizzle-kit push --config=drizzle.config.sqlite.ts",
     "migrate:pg:generate": "drizzle-kit generate --config=drizzle.config.pg.ts",
     "migrate:pg:push": "drizzle-kit push --config=drizzle.config.pg.ts"
   },
