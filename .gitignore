@@ -36,3 +36,5 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+local-files
+packages/db/sqlite/local.db

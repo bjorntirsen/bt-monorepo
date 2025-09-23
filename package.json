@@ -23,8 +23,8 @@
     ]
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:*",
     "@eslint/js": "catalog:",
+    "@repo/eslint-config": "workspace:*",
     "eslint": "catalog:",
     "husky": "catalog:",
     "lint-staged": "catalog:",
@@ -35,5 +35,5 @@
   "engines": {
     "node": ">=22"
   },
-  "packageManager": "pnpm@10.17.0"
+  "packageManager": "pnpm@10.17.1"
 }
