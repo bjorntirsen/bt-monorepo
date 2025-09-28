@@ -1,0 +1,120 @@
+
+> bt-monorepo@ check:types /Users/bjorntirsen/projects/bt-monorepo
+> turbo run check:types
+
+turbo 2.5.8
+
+• Packages in scope: @repo/auth, @repo/db, @repo/env-config, @repo/eslint-config, @repo/typescript-config, @repo/ui, docs, idp, web
+• Running check:types in 9 packages
+• Remote caching enabled
+web:check:types: cache miss, executing 54ece0fd32c84700
+web:check:types: 
+web:check:types: > web@0.1.0 check:types /Users/bjorntirsen/projects/bt-monorepo/apps/web
+web:check:types: > tsc --noEmit
+web:check:types: 
+web:check:types: .next/types/app/layout.ts(2,24): error TS6142: Module '../../../app/layout.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/layout.tsx', but '--jsx' is not set.
+web:check:types: .next/types/app/layout.ts(5,29): error TS6142: Module '../../../app/layout.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/layout.tsx', but '--jsx' is not set.
+web:check:types: .next/types/app/page.ts(2,24): error TS6142: Module '../../../app/page.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/page.tsx', but '--jsx' is not set.
+web:check:types: .next/types/app/page.ts(5,29): error TS6142: Module '../../../app/page.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/page.tsx', but '--jsx' is not set.
+web:check:types: .next/types/validator.ts(42,39): error TS6142: Module '../../app/page.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/page.tsx', but '--jsx' is not set.
+web:check:types: .next/types/validator.ts(57,39): error TS6142: Module '../../app/layout.js' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/layout.tsx', but '--jsx' is not set.
+web:check:types: app/layout.tsx(25,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/layout.tsx(26,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.test.tsx(3,18): error TS6142: Module './page' was resolved to '/Users/bjorntirsen/projects/bt-monorepo/apps/web/app/page.tsx', but '--jsx' is not set.
+web:check:types: app/page.test.tsx(7,12): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(2,24): error TS2307: Cannot find module '@repo/ui/button' or its corresponding type declarations.
+web:check:types:   There are types at '/Users/bjorntirsen/projects/bt-monorepo/apps/web/node_modules/@repo/ui/src/button.tsx', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+web:check:types: app/page.tsx(14,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(15,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(21,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(28,5): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(29,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(30,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(39,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(40,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(41,36): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(43,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(46,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(47,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(53,13): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(62,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(71,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(75,7): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(76,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(81,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(90,9): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: app/page.tsx(95,11): error TS17004: Cannot use JSX unless the '--jsx' flag is provided.
+web:check:types: cypress/support/commands.ts(3,9): error TS2669: Augmentations for the global scope can only be directly nested in external modules or ambient module declarations.
+web:check:types: cypress/support/commands.ts(12,34): error TS2315: Type 'Chainable' is not generic.
+web:check:types: cypress/support/commands.ts(17,22): error TS2345: Argument of type '"getByCy"' is not assignable to parameter of type 'keyof Chainable<any>'.
+web:check:types: tsconfig.json(2,14): error TS6053: File '@repo/typescript-config/nextjs.json' not found.
+web:check:types: vitest.config.ts(2,19): error TS2307: Cannot find module '@vitejs/plugin-react' or its corresponding type declarations.
+web:check:types:   There are types at '/Users/bjorntirsen/projects/bt-monorepo/apps/web/node_modules/@vitejs/plugin-react/dist/index.d.ts', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+web:check:types: vitest.config.ts(3,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/@testing-library+jest-dom@6.8.0/node_modules/@testing-library/jest-dom/types/jest.d.ts(1,23): error TS2688: Cannot find type definition file for 'jest'.
+web:check:types: ../../node_modules/.pnpm/@testing-library+jest-dom@6.8.0/node_modules/@testing-library/jest-dom/types/jest.d.ts(9,34): error TS2339: Property 'stringContaining' does not exist on type 'ExpectStatic'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(5,14): error TS2300: Duplicate identifier 'Message'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(6,14): error TS2300: Duplicate identifier 'ObjectProperty'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(79,14): error TS2300: Duplicate identifier 'ChaiPlugin'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(106,14): error TS2300: Duplicate identifier 'AssertionArgs'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(146,21): error TS2300: Duplicate identifier 'Operator'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(148,21): error TS2300: Duplicate identifier 'OperatorComparable'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(176,13): error TS2717: Subsequent property declarations must have the same type.  Property 'a' must be of type 'TypeComparison', but here has type 'Assertion'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(177,13): error TS2717: Subsequent property declarations must have the same type.  Property 'an' must be of type 'TypeComparison', but here has type 'Assertion'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(231,13): error TS2717: Subsequent property declarations must have the same type.  Property 'oneOf' must be of type '(list: readonly any[], message?: string) => Assertion', but here has type 'OneOf'.
+web:check:types: ../../node_modules/.pnpm/@types+chai@5.2.2/node_modules/@types/chai/index.d.ts(2131,22): error TS2300: Duplicate identifier 'AssertionError'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(20,10): error TS2300: Duplicate identifier 'Message'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(21,10): error TS2300: Duplicate identifier 'ObjectProperty'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(88,10): error TS2300: Duplicate identifier 'ChaiPlugin'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(115,10): error TS2300: Duplicate identifier 'AssertionArgs'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(159,17): error TS2300: Duplicate identifier 'Operator'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(161,17): error TS2300: Duplicate identifier 'OperatorComparable'.
+web:check:types: ../../node_modules/.pnpm/cypress@15.2.0/node_modules/cypress/types/chai/index.d.ts(1937,18): error TS2300: Duplicate identifier 'AssertionError'.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/build/webpack/loaders/next-app-loader/index.d.ts(1,13): error TS2613: Module '"next/dist/compiled/webpack/webpack"' has no default export. Did you mean to use 'import { webpack } from "next/dist/compiled/webpack/webpack"' instead?
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/components/error-boundary.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/components/http-access-fallback/error-boundary.d.ts(11,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/components/layout-router.d.ts(2,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/image-component.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/link.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/script.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/client/with-router.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/export/types.d.ts(5,13): error TS1192: Module '"next/dist/compiled/amphtml-validator"' has no default export.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/lib/metadata/metadata.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/pages/_app.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/pages/_document.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/pages/_error.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/server/app-render/types.d.ts(11,8): error TS1192: Module '"next/dist/compiled/superstruct"' has no default export.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(39,16): error TS2304: Cannot find name 'HeadersIterator'.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(40,13): error TS2304: Cannot find name 'HeadersIterator'.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(41,15): error TS2304: Cannot find name 'HeadersIterator'.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/server/web/spec-extension/adapters/headers.d.ts(42,26): error TS2304: Cannot find name 'HeadersIterator'.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/amp-context.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/app-router-context.shared-runtime.d.ts(4,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/dynamic.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/head-manager-context.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/head.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/image-config-context.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/loadable-context.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/loadable.shared-runtime.d.ts(21,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/router-context.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/server-inserted-html.shared-runtime.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/shared/lib/utils.d.ts(10,13): error TS1192: Module '"fs"' has no default export.
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/styled-jsx/types/global.d.ts(1,8): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/next@15.5.3_@babel+core@7.28.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next/dist/types.d.ts(8,13): error TS1259: Module '"/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/@types+react@19.1.13/node_modules/@types/react/index"' can only be default-imported using the 'esModuleInterop' flag
+web:check:types: ../../node_modules/.pnpm/vite@7.1.7_@types+node@22.18.6_jiti@2.5.1_lightningcss@1.30.1_tsx@4.20.5_yaml@2.8.1/node_modules/vite/dist/node/index.d.ts(7,41): error TS2307: Cannot find module 'rollup/parseAst' or its corresponding type declarations.
+web:check:types:   There are types at '/Users/bjorntirsen/projects/bt-monorepo/node_modules/.pnpm/vite@7.1.7_@types+node@22.18.6_jiti@2.5.1_lightningcss@1.30.1_tsx@4.20.5_yaml@2.8.1/node_modules/rollup/dist/parseAst.d.ts', but this result could not be resolved under your current 'moduleResolution' setting. Consider updating to 'node16', 'nodenext', or 'bundler'.
+web:check:types: ../../node_modules/.pnpm/vitest@3.2.4_@types+node@22.18.6_jiti@2.5.1_jsdom@27.0.0_postcss@8.5.6__lightningcss@1.30.1_tsx@4.20.5_yaml@2.8.1/node_modules/vitest/dist/chunks/reporters.d.BFLkQcL6.d.ts(105,2): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+web:check:types: ../../node_modules/.pnpm/vitest@3.2.4_@types+node@22.18.6_jiti@2.5.1_jsdom@27.0.0_postcss@8.5.6__lightningcss@1.30.1_tsx@4.20.5_yaml@2.8.1/node_modules/vitest/dist/chunks/reporters.d.BFLkQcL6.d.ts(146,2): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+web:check:types: ../../node_modules/.pnpm/vitest@3.2.4_@types+node@22.18.6_jiti@2.5.1_jsdom@27.0.0_postcss@8.5.6__lightningcss@1.30.1_tsx@4.20.5_yaml@2.8.1/node_modules/vitest/dist/chunks/reporters.d.BFLkQcL6.d.ts(197,2): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+web:check:types:  ELIFECYCLE  Command failed with exit code 2.
+web:check:types: ERROR: command finished with error: command (/Users/bjorntirsen/projects/bt-monorepo/apps/web) /Users/bjorntirsen/.pnpm-global/.tools/pnpm/10.17.1/bin/pnpm run check:types exited (2)
+web#check:types: command (/Users/bjorntirsen/projects/bt-monorepo/apps/web) /Users/bjorntirsen/.pnpm-global/.tools/pnpm/10.17.1/bin/pnpm run check:types exited (2)
+
+ Tasks:    0 successful, 1 total
+Cached:    0 cached, 1 total
+  Time:    3.306s 
+Failed:    web#check:types
+
+ ERROR  run failed: command  exited (2)
+ ELIFECYCLE  Command failed with exit code 2.

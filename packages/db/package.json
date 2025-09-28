@@ -4,23 +4,30 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "migrate:sqlite:generate": "drizzle-kit generate --config=drizzle.config.sqlite.ts",
-    "migrate:sqlite:push": "DATABASE_URL=file:./sqlite/local.db drizzle-kit push --config=drizzle.config.sqlite.ts",
-    "migrate:pg:generate": "drizzle-kit generate --config=drizzle.config.pg.ts",
-    "migrate:pg:push": "drizzle-kit push --config=drizzle.config.pg.ts"
+    "drizzle:push": "drizzle-kit push",
+    "drizzle:generate": "drizzle-kit generate",
+    "drizzle:migrate": "drizzle-kit migrate",
+    "lint": "eslint . --max-warnings 0",
+    "check:types": "tsc --noEmit",
+    "test": "tsx ./index.ts"
   },
   "dependencies": {
     "@libsql/client": "catalog:",
-    "@repo/env-config": "workspace:*",
     "better-sqlite3": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
     "pg": "catalog:"
   },
   "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
     "@types/better-sqlite3": "catalog:",
+    "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "drizzle-kit": "catalog:",
     "tsx": "catalog:"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./schema": "./schema.ts"
   }
 }
