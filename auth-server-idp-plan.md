@@ -56,7 +56,7 @@ packages/db/
 
 ### M1 — Minimal Local Auth (Session-based)
 
-- Implement `core-auth`: users, password hashing (argon2), email verification tokens.
+- Implement `core-auth`: users, password hashing, email verification tokens.
 - Dev email transport (console).
 - `apps/idp` login/register/verify UI.
 - Cookie sessions or sessions table.
