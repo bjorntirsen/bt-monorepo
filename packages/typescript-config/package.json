@@ -3,7 +3,7 @@
   "exports": {
     "./base.json": "./base.json",
     "./node.json": "./node.json",
-    "./react.json": "./react.json",
+    "./nextjs.json": "./nextjs.json",
     "./react-library.json": "./react-library.json"
   },
   "version": "1.0.0",
