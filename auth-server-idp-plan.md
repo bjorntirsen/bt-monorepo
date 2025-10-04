@@ -45,18 +45,11 @@ packages/db/
 
 ## Milestones (Incremental)
 
-### M0 — Scaffolding
-
-- Setup `packages/config` (dotenv + zod).
-- Add Drizzle schema in `packages/db`:
-  - Create `sqliteTable` definitions for local dev (`file:./dev.db`).
-  - Create `pgTable` definitions for Supabase Postgres.
-  - Use drizzle-kit to generate and run migrations.
-- Skeleton `apps/idp` with Next.js.
+### M0 — Scaffolding - DONE ✅
 
 ### M1 — Minimal Local Auth (Session-based)
 
-- Implement `core-auth`: users, password hashing (argon2), email verification tokens.
+- Implement `core-auth`: users, password hashing, email verification tokens.
 - Dev email transport (console).
 - `apps/idp` login/register/verify UI.
 - Cookie sessions or sessions table.

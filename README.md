@@ -47,16 +47,25 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## DB workflow
 
-### For local dev (SQLite):
+### Local Development Database Setup
 
-```
-pnpm --filter @repo/db migrate:sqlite:generate
-pnpm --filter @repo/db migrate:sqlite:push
-```
+The project uses SQLite for local development. When you first clone the repository or pull new changes, follow these steps to set up your local database:
 
-### For production (Supabase Postgres):
+1. The database file (`packages/db/local.db`) is git-ignored, so you'll need to create it:
 
-```
-pnpm --filter @repo/db migrate:pg:generate
-pnpm --filter @repo/db migrate:pg:push
-```
+   ```bash
+   # Create and initialize the local database
+   pnpm --filter @repo/db migrate:sqlite:push
+   ```
+
+2. When you need to make schema changes:
+
+   ```bash
+   # Generate a new migration
+   pnpm --filter @repo/db migrate:sqlite:generate
+
+   # Apply the migration to your local database
+   pnpm --filter @repo/db migrate:sqlite:push
+   ```
+
+Note: The local SQLite database file is not tracked in git to avoid conflicts and keep development data separate. Each developer should maintain their own local database.
