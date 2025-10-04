@@ -23,7 +23,7 @@ Key characteristics:
 - ⚠️ Slower than bcrypt/argon2 but fine for first iteration
 
 ```typescript
-// filepath: packages/core-auth/password.ts
+// filepath: packages/auth/password.ts
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
 const KEY_LENGTH = 64;
@@ -47,7 +47,7 @@ export function verifyPassword(password: string, stored: string): boolean {
 ### 2. User Model
 
 ```typescript
-// filepath: packages/core-auth/users.ts
+// filepath: packages/auth/users.ts
 import { db } from "@repo/db/client";
 import { users } from "@repo/db/sqlite/schema";
 import { hashPassword, verifyPassword } from "./password";
@@ -70,7 +70,7 @@ export async function authenticateUser(email: string, password: string) {
 Use signed, HTTP-only cookies to persist login state.
 
 ```typescript
-// filepath: packages/core-auth/sessions.ts
+// filepath: packages/auth/sessions.ts
 import { randomBytes } from "crypto";
 import { db } from "@repo/db/client";
 
@@ -98,7 +98,7 @@ In `apps/idp`, set cookies via `Response.cookies.set("session", sessionId, { htt
 Console-based transport:
 
 ```typescript
-// filepath: packages/core-auth/email.ts
+// filepath: packages/auth/email.ts
 import { randomBytes } from "crypto";
 
 const pending = new Map<string, string>();
@@ -139,7 +139,7 @@ Logout → session cleared.
 Login with wrong password → rejected.
 
 Deliverables
-packages/core-auth: password.ts, users.ts, sessions.ts, email.ts.
+packages/auth: password.ts, users.ts, sessions.ts, email.ts.
 
 apps/idp/app/: /login, /register, /verify, /logout.
 
