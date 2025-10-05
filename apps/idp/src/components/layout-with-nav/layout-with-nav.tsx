@@ -1,6 +1,6 @@
 "use client";
 
-import { AppLayout } from "@/components/layout";
+import { AppLayout } from "./app-layout";
 import { usePathname } from "next/navigation";
 
 const links = [

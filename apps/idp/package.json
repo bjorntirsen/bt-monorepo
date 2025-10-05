@@ -12,9 +12,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@radix-ui/react-label": "catalog:",
-    "@radix-ui/react-separator": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
     "@repo/ui": "workspace:*",
     "lucide-react": "catalog:",
     "next": "catalog:",
