@@ -1,7 +1,7 @@
 "use client";
 
+import { AppLayout } from "@/components/layout";
 import { usePathname } from "next/navigation";
-import { AppLayout } from "@repo/ui/layout";
 
 const links = [
   { href: "/", label: "Home" },
