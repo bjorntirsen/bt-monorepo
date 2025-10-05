@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NavBar } from "./navbar";
+import { NavBar } from "./header-with-nav";
 
 type Link = { href: string; label: string };
 
