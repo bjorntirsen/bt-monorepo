@@ -9,7 +9,7 @@
     "test": "turbo run test",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "check:types": "turbo run check:types",
+    "typecheck": "turbo run typecheck",
     "test:browser-based": "turbo run test:browser-based",
     "prepare": "husky",
     "lint-staged": "lint-staged"

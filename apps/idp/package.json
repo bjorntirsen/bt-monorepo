@@ -1,28 +1,33 @@
 {
-  "name": "idp",
-  "version": "0.1.0",
+  "name": "@repo/idp",
+  "version": "1.0.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:fix": "next lint --fix",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@radix-ui/react-label": "catalog:",
+    "@radix-ui/react-separator": "catalog:",
+    "@radix-ui/react-slot": "catalog:",
+    "@repo/ui": "workspace:*",
+    "lucide-react": "catalog:",
     "next": "catalog:",
+    "next-themes": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "@repo/ui": "workspace:*"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
-    "typescript": "catalog:",
+    "@repo/eslint-config": "workspace:^",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@tailwindcss/postcss": "catalog:",
-    "tailwindcss": "catalog:",
-    "eslint": "catalog:",
-    "eslint-config-next": "catalog:",
-    "@eslint/eslintrc": "catalog:"
+    "typescript": "catalog:"
   }
 }

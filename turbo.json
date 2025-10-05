@@ -9,73 +9,22 @@
       "outputs": [".next/**", "!.next/cache/**"]
     },
     "lint": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx}",
-        "**/*.{ts,tsx,js,jsx}",
-        "eslint.config.{js,mjs,ts}",
-        ".eslintrc.*",
-        "package.json"
-      ],
-      "outputs": []
+      "dependsOn": ["^lint"]
     },
     "test": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx}",
-        "test/**/*.{ts,tsx,js,jsx}",
-        "**/*.test.{ts,tsx,js,jsx}",
-        "**/*.spec.{ts,tsx,js,jsx}",
-        "vitest.config.{ts,js}",
-        "setupVitest.ts",
-        "tsconfig.json",
-        "package.json"
-      ],
-      "outputs": []
+      "dependsOn": ["^test"]
     },
-    "check:types": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx}",
-        "tsconfig.json",
-        "package.json"
-      ],
-      "outputs": []
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
     },
     "format": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx,json,md}",
-        "**/*.{ts,tsx,js,jsx,json,md}",
-        ".prettierrc*",
-        "package.json"
-      ],
-      "outputs": []
+      "dependsOn": ["^format"]
     },
     "format:check": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx,json,md}",
-        "**/*.{ts,tsx,js,jsx,json,md}",
-        ".prettierrc*",
-        "package.json"
-      ],
-      "outputs": []
+      "dependsOn": ["^format:check"]
     },
     "test:browser-based": {
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        "src/**/*.{ts,tsx,js,jsx}",
-        "cypress/**/*.{ts,js}",
-        "cypress.config.{ts,js}",
-        "tsconfig.json",
-        "package.json"
-      ],
-      "outputs": [
-        "cypress/screenshots/**",
-        "cypress/videos/**",
-        ".turbo/cypress-results/**"
-      ]
+      "dependsOn": ["^test:browser-based"]
     },
     "dev": {
       "cache": false,

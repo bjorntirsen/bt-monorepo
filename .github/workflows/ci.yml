@@ -56,7 +56,7 @@ jobs:
         run: |
           pnpm turbo run lint --continue
           pnpm turbo run format:check --continue
-          pnpm turbo run check:types --continue
+          pnpm turbo run typecheck --continue
 
   unit:
     needs: [quality-checks]

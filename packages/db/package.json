@@ -8,7 +8,7 @@
     "drizzle:generate": "drizzle-kit generate",
     "drizzle:migrate": "drizzle-kit migrate",
     "lint": "eslint . --max-warnings 0",
-    "check:types": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "test": "tsx ./index.ts"
   },
   "dependencies": {
