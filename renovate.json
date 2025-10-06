@@ -43,6 +43,10 @@
       "matchPackageNames": ["@types/node"],
       "versioning": "node",
       "allowedVersions": "<23"
+    },
+    {
+      "matchPackageNames": ["eslint-plugin-react-hooks"],
+      "allowedVersions": "<6.0.0"
     }
   ]
 }
