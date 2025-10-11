@@ -38,4 +38,4 @@ yarn-error.log*
 .DS_Store
 *.pem
 local-files
-packages/db/local.db
+packages/db/dev.db

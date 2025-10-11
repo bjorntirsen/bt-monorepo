@@ -12,7 +12,10 @@
     "typecheck": "turbo run typecheck",
     "test:browser-based": "turbo run test:browser-based",
     "prepare": "husky",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "db:generate": "pnpm --filter @repo/db drizzle:generate",
+    "db:migrate": "pnpm --filter @repo/db drizzle:migrate",
+    "db:update": "pnpm run db:generate && pnpm run db:migrate"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

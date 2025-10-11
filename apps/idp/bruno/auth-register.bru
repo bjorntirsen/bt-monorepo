@@ -5,11 +5,14 @@ meta {
 }
 
 post {
-  url: http://localhost:3002/api/auth/register
+  url: {{idp-base-url}}/api/auth/register
   body: json
   auth: none
 }
 
 body:json {
-  {"hello": "hi"}
+  {
+    "email": "test@example.com",
+    "password": "supersecret"
+  }
 }
