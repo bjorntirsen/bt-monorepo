@@ -4,7 +4,12 @@ import { hashPassword, verifyPassword } from "./password";
 
 export async function registerUser(email: string, password: string) {
   const passwordHash = hashPassword(password);
-  await db.insert(users).values({ email, passwordHash });
+  const [user] = await db
+    .insert(users)
+    .values({ email, passwordHash })
+    .returning();
+
+  return user;
 }
 
 export async function authenticateUser(email: string, password: string) {

@@ -1,8 +1,8 @@
 import { randomBytes } from "crypto";
 
-const pending = new Map<string, string>();
+const pending = new Map<string, number>();
 
-export function generateVerificationToken(userId: string) {
+export function generateVerificationToken(userId: number) {
   const token = randomBytes(16).toString("hex");
   pending.set(token, userId);
   console.log(`Verify: http://localhost:3000/verify?token=${token}`);
