@@ -23,14 +23,15 @@
       "groupName": "non-breaking updates"
     },
     {
-      "matchManagers": ["github-actions"],
-      "groupName": "GitHub Actions updates"
-    },
-    {
-      "matchManagers": ["asdf", "github-actions"],
-      "matchPackageNames": ["node", "actions/setup-node"],
+      "matchManagers": ["asdf"],
+      "matchPackageNames": ["node"],
       "versioning": "node",
       "allowedVersions": "<23"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["actions/setup-node"],
+      "versioning": "loose"
     },
     {
       "matchManagers": ["dockerfile"],
