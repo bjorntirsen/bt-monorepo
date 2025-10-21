@@ -32,8 +32,7 @@
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["actions/setup-node"],
       "versioning": "loose"
-    }
-    ,
+    },
     {
       "matchManagers": ["dockerfile"],
       "matchPackageNames": ["node"],
