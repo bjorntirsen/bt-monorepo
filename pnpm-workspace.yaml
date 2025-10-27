@@ -30,7 +30,7 @@ catalog:
   cypress: ^15.0.0
   dotenv: 17.2.3
   drizzle-kit: 0.31.5
-  drizzle-orm: 0.44.6
+  drizzle-orm: 0.44.7
   eslint: 9.38.0
   eslint-config-next: ^15.5.3
   eslint-config-prettier: ^10.1.1
