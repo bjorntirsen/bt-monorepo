@@ -35,6 +35,19 @@
       ]
     },
     {
+      "groupName": "Vite + Vitest ecosystem",
+      "matchPackagePatterns": [
+        "^vite$",
+        "^vitest$",
+        "^@vitejs/",
+        "^@vitest/",
+        "^@testing-library/",
+        "^@types/testing-library__",
+        "vite-plugin",
+        "vitest-plugin"
+      ]
+    },
+    {
       "matchManagers": ["asdf"],
       "matchPackageNames": ["node"],
       "versioning": "node",
