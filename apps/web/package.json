@@ -42,11 +42,5 @@
     "start-server-and-test": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
-  },
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.2",
-      "@types/react-dom": "19.2.2"
-    }
   }
 }
