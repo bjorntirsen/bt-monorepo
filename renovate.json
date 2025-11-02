@@ -23,6 +23,18 @@
       "groupName": "non-breaking updates"
     },
     {
+      "groupName": "Next.js + React ecosystem",
+      "matchPackagePatterns": [
+        "^next$",
+        "^@next/",
+        "^react$",
+        "^react-",
+        "^eslint-config-next$",
+        "^eslint-plugin-react",
+        "^eslint-plugin-react-hooks"
+      ]
+    },
+    {
       "matchManagers": ["asdf"],
       "matchPackageNames": ["node"],
       "versioning": "node",
