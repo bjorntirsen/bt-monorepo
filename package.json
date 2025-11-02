@@ -29,6 +29,7 @@
   "devDependencies": {
     "@eslint/js": "catalog:",
     "@repo/eslint-config": "workspace:*",
+    "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
     "husky": "catalog:",
     "lint-staged": "catalog:",
