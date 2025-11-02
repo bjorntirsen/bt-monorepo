@@ -143,7 +143,7 @@ jobs:
       - name: Build
         run: pnpm turbo run build --continue
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: apps
