@@ -23,12 +23,14 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "@repo/eslint-config": "workspace:^",
     "@repo/typescript-config": "workspace:*",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
+    "eslint": "catalog:",
+    "eslint-config-next": "catalog:",
+    "@eslint/eslintrc": "catalog:",
     "typescript": "catalog:"
   }
 }
