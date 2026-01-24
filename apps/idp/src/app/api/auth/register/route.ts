@@ -26,9 +26,12 @@ export async function POST(req: Request) {
     // 2. Trigger verification email (console log for now)
     generateVerificationToken(user.id);
 
-    return NextResponse.json({
-      message: "User registered, check console for verification link",
-    });
+    return NextResponse.json(
+      {
+        message: "User registered, check console for verification link",
+      },
+      { status: 201 },
+    );
   } catch (err) {
     console.error(err);
     return NextResponse.json(
