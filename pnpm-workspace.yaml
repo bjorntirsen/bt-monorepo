@@ -5,7 +5,7 @@ packages:
 catalog:
   "@cypress/react": ^9.0.1
   "@eslint/eslintrc": ^3
-  "@eslint/js": 9.39.2
+  "@eslint/js": 10.0.1
   "@libsql/client": 0.17.0
   "@next/eslint-plugin-next": 16.1.6
   "@radix-ui/react-dropdown-menu": 2.1.16
