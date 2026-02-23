@@ -52,8 +52,8 @@ catalog:
   react: ^19.2.0
   react-dom: ^19.2.0
   start-server-and-test: ^2.0.13
-  tailwind-merge: 3.4.0
-  tailwindcss: 4.1.18
+  tailwind-merge: 3.5.0
+  tailwindcss: 4.2.0
   tailwindcss-animate: ^1.0.7
   tsx: 4.21.0
   turbo: ^2.6.3
