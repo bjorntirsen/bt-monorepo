@@ -29,7 +29,11 @@ export const config = [
     plugins: {
       "react-hooks": pluginReactHooks,
     },
-    settings: { react: { version: "detect" } },
+    // Workaround for eslint-plugin-react incompatibility with ESLint v10.
+    // eslint-plugin-react calls the removed context.getFilename() API for React
+    // version auto-detection. Explicitly setting the version bypasses that.
+    // Track: https://github.com/jsx-eslint/eslint-plugin-react/issues/3977
+    settings: { react: { version: "19" } },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
       // React scope no longer necessary with new JSX transform.
