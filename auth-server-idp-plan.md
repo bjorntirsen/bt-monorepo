@@ -1,255 +1,505 @@
 # Auth Server / IDP Plan (Node.js + TypeScript + Turborepo)
 
-A pragmatic, incremental plan to build an OAuth 2.1-ready auth server/IDP in a TypeScript turborepo, runnable locally on SQLite and deployable to Supabase (Postgres).
+A pragmatic plan for building a **small but serious OAuth 2.1 auth server** for learning and hobby projects.
+
+This plan is intentionally split into:
+
+- **V1 — OAuth 2.1 Core**
+- **V2 — Management, convenience, and hardening**
+
+The goal is to avoid scope creep: build a correct, usable core first, then add the nicer platform features later.
 
 ---
 
-## High-Level Approach
+## Project Goal
 
-- **Auth core:** Custom OAuth 2.1 / OIDC implementation (all endpoints built in-house with TypeScript + jose).
-- **Persistence layer (SQLite local + Supabase Postgres prod):**
-  - **Chosen:** Drizzle ORM (lightweight, TS-native, SQL-first).
-  - ⚠️ Note: Requires maintaining `sqliteTable` and `pgTable` definitions separately, but queries can stay shared.
-- **Runtime/stack:** Next.js (backend + login/consent frontend) and a separate Vite + React SPA (admin dashboard).
-- **Repo:** Turborepo monorepo with `apps/*` and `packages/*`, all TypeScript.
+Build a custom auth server / IDP that:
+
+- is good enough to use for hobby projects
+- teaches the real mechanics of auth, sessions, OAuth, and OIDC
+- is implemented in TypeScript in the existing monorepo
+- is deployable to a VPS
+- aims to satisfy **OAuth 2.1 expectations** without turning into a giant IAM platform
 
 ---
 
-## Turborepo Layout
+## Core Product Decisions
+
+### 1. Database
+
+**Chosen direction: Postgres-first / Postgres-only**
+
+- Use **Postgres** as the primary database for both development and deployment.
+- Use **Drizzle ORM** with one schema model, one migration path, and one set of queries.
+- Avoid the earlier SQLite + Postgres dual-schema idea unless there is a very strong reason to reintroduce it.
+
+Why:
+
+- less duplication
+- less schema drift
+- more realistic auth/storage behavior
+- better fit for a “serious hobby” auth server
+
+### 2. Runtime / App Shape
+
+- **apps/idp** → Next.js app for:
+  - login / register / verify / consent UI
+  - route handlers for auth endpoints
+- Delay **apps/admin** until V2
+- Keep shared packages small and practical at first:
+  - `packages/db`
+  - `packages/auth`
+  - `packages/config`
+  - optional `packages/ui` if shared UI actually pays for itself
+
+### 3. Auth Scope
+
+The project should focus on a **small serious core**, not broad enterprise coverage.
+
+That means:
+
+- yes to **Authorization Code + PKCE**
+- yes to **refresh token rotation**
+- yes to **strict redirect URI matching**
+- yes to **consent**
+- yes to **good tests**
+- no to premature extras like PAR, Device Code, CIBA, multi-tenant admin, federation, etc.
+
+### 4. IDP Session Model
+
+Use:
+
+- **cookie sessions** for the user interacting with the IDP itself
+- **OAuth tokens** for client applications
+
+That keeps the model clear:
+
+- browser login/consent session is one thing
+- OAuth token issuance is another
+
+---
+
+## What “Not Overly Enterprise” Means Here
+
+Out of scope for the first serious versions:
+
+- multi-tenant architecture
+- advanced RBAC/ABAC systems
+- federation / SAML / social login
+- dynamic client registration
+- PAR / Device Code / CIBA
+- large audit platform
+- heavy internal platform abstractions
+- building a big admin product before the auth core works well
+
+This is not about avoiding quality.
+It is about avoiding low-value complexity too early.
+
+---
+
+## Recommended Repository Shape
 
 ```text
 ├─ apps/
-│ ├─ idp/         # Next.js app with custom OAuth2.1/OIDC server + login/consent UI
-│ └─ admin/       # Vite SPA (admin dashboard)
+│ ├─ idp/         # Next.js app: login/consent UI + OAuth/OIDC route handlers
+│ └─ admin/       # later, in V2
 ├─ packages/
-│ ├─ db/          # Drizzle schemas & query layer
-│ ├─ core-auth/   # Domain logic (users, sessions, MFA)
-│ ├─ ui/          # Shared UI components
-│ ├─ config/      # Env loader (zod-validated)
-│ ├─ types/       # Shared TS types
-│ └─ tooling/     # ESLint, tsconfig, vitest utils
+│ ├─ db/          # Drizzle schema, migrations, query layer
+│ ├─ auth/        # domain logic: users, sessions, clients, tokens
+│ ├─ config/      # env parsing / config validation
+│ └─ ui/          # optional shared UI components
 ```
+
+Keep this lean in V1. More packages can come later if they solve a real problem.
 
 ---
 
-## Optional DB Package Structure
+# V1 — OAuth 2.1 Core
 
-```text
-packages/db/
-├─ sqlite/        # sqliteTable definitions + migrations
-├─ pg/            # pgTable definitions + migrations
-└─ client/        # unified repo API that picks the correct dialect
-```
+## V1 Goal
 
----
+Ship a **small, serious, deployable auth server** that can realistically back hobby projects.
 
-## Milestones (Incremental)
+It should be possible to say:
 
-### M0 — Scaffolding - DONE ✅
+> “I can use this for login and authorization in my own projects now.”
 
-### M1 — Minimal Local Auth (Session-based)
+## V1 Scope
 
-- Implement `core-auth`: users, password hashing, email verification tokens.
-- Dev email transport (console).
-- `apps/idp` login/register/verify UI.
-- Cookie sessions or sessions table.
-- E2E tests for login/register/logout.
+### Included
 
-### M2 — Add OAuth2.1 / OIDC Endpoints (Custom Implementation)
+- Postgres + Drizzle migrations
+- users
+- password hashing
+- email verification
+- IDP login/logout/session handling
+- OAuth clients stored in DB
+- Authorization Code flow
+- PKCE
+- consent flow
+- authorization codes stored in DB
+- token endpoint
+- access tokens
+- refresh tokens
+- refresh token rotation / replay detection
+- strict redirect URI validation
+- scope validation
+- tests
+- deployability on VPS
 
-- Implement core OAuth2.1 endpoints:
-  - `/authorize` → handles auth requests with PKCE, redirects with code
-  - `/token` → exchanges code for tokens, issues refresh + access + (optional) ID token
-  - `/userinfo` → returns claims about the authenticated user
-  - `/jwks.json` → expose JSON Web Key Set for verifying signatures
-  - `/.well-known/openid-configuration` → discovery metadata
-- Implement refresh token rotation and replay detection
-- Persist authorization codes, tokens, and sessions in Drizzle
-- Issue and verify JWTs (ID tokens, access tokens) with `jose`
-- Build consent flow UI in `apps/idp`
-- Hard-fail on disallowed grant types (no implicit/hybrid flows)
+### Strongly recommended in V1
 
-### M3 — OAuth 2.1 Compliance
+Even though the main target is OAuth 2.1, these make the server much more useful in practice:
 
-- Enforce PKCE for public clients.
-- No implicit/hybrid flows.
-- Refresh token rotation + reuse detection.
-- Add PAR (Pushed Authorization Requests).
-- Optional: Device Code, CIBA.
+- `/.well-known/openid-configuration`
+- `/jwks.json`
+- `id_token`
+- `/userinfo`
 
-### M4 — Admin App
+This gives you a lightweight but genuinely useful OIDC-capable provider.
 
-- `apps/admin` with CRUD for Clients & Users.
-- RBAC for admin users.
-- Audit logs.
+### Explicitly not in V1
 
-### M5 — MFA & Hardening
-
-- Add TOTP (QR codes).
-- Add WebAuthn (passkeys).
-- Step-up authentication for sensitive scopes.
-- Security alerts (new sign-ins, recovery codes).
-
-### M6 — Deploy to Supabase
-
-- Apply Drizzle migrations to Supabase.
-- Configure secrets (cookie keys, JWKS, SMTP).
-- Reverse proxy/HTTPS with proper issuer URL.
-- Cache `.well-known/openid-configuration` and JWKS behind CDN.
-
-### M7 — Ecosystem & Polish
-
-- Add discovery doc.
-- Provide sample clients (SPA, server, CLI).
-- Token introspection & revocation endpoints.
-- Rate limiting, observability, audit logs.
+- admin app
+- MFA
+- social login
+- SAML
+- PAR
+- Device Code
+- dynamic client registration
+- multi-tenant support
+- big operational dashboards
 
 ---
 
-## DB Layer (Drizzle Example)
+## V1 PR-Sized Milestones
 
-- Define separate schema files:
-  - `packages/db/sqlite/schema.ts`
-  - `packages/db/pg/schema.ts`
+### V1.1 — Postgres foundation
 
-Example (user table):
+Goal: establish one clean persistence direction.
 
-```ts
-// sqlite/schema.ts
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+Deliverables:
 
-export const users = sqliteTable("users", {
-  id: integer("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-});
-```
+- move DB plan to **Postgres-first**
+- configure `packages/db` for Postgres only
+- add initial Drizzle schema + migrations
+- document local and VPS database setup
+- add env/config validation for DB connection
 
-```ts
-// pg/schema.ts
-import { pgTable, text, serial } from "drizzle-orm/pg-core";
+### V1.2 — User model and password auth
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-});
-```
+Goal: make local authentication real.
 
-- Create a unified query API in `packages/db/client` that loads the right dialect at runtime based on env
-- Prefer column types and constraints supported by both SQLite & Postgres to maximize portability
-- Run CI tests against both SQLite and Postgres (via Supabase or testcontainers)
+Deliverables:
 
-## IDP App Structure (Next.js)
+- users table
+- password hashing + verification
+- register flow
+- login flow
+- basic protected route or “who am I” route
+- tests for register/login failure/success cases
 
-```text
-apps/idp/
-├─ app/
-│  ├─ login/             # login page
-│  ├─ consent/           # consent page
-│  └─ api/
-│     ├─ authorize/       # /authorize endpoint
-│     ├─ token/           # /token endpoint
-│     ├─ userinfo/        # /userinfo endpoint
-│     ├─ jwks.json/       # JWKS endpoint
-│     └─ well-known/      # /.well-known/openid-configuration
-├─ lib/
-│  ├─ provider.ts        # new Provider(issuer, configuration)
-│  ├─ adapter/DrizzleAdapter.ts
-│  └─ services/
-│     ├─ users.ts
-│     ├─ mfa.ts
-│     └─ email.ts
-```
+### V1.3 — Email verification
 
-## Frontends
+Goal: make account lifecycle less toy-like.
 
-- **apps/idp (Next.js)**
-  - Routes: `/login`, `/register`, `/verify-email`, `/forgot`, `/mfa`, `/consent`
-  - Handles login, consent, and all OIDC interaction flows
-- **apps/admin (Vite SPA)**
-  - Admin dashboard (CRUD for clients/users, audit logs, RBAC)
-  - Auth gate + RBAC for admin users
-  - Consumes APIs exposed from `apps/idp`
-  - Add a `vercel.json` with a rewrite so SPA routes resolve to `index.html`:
-    ```json
-    {
-      "rewrites": [{ "source": "/(.*)", "destination": "/" }]
-    }
-    ```
+Deliverables:
 
-## Security & Crypto
+- verification token model
+- verification endpoint/UI
+- console email transport first
+- mark user as verified
+- tests for valid/invalid/expired verification token paths
 
-- Use jose for JWKs, signing, verification
-- Rotate keys regularly; expose via JWKS endpoint
-- Argon2id for password hashing
-- Strict redirect URI matching
-- CSRF protection on forms
-- Tight CORS config
-- Cookies: `Secure` in prod, `SameSite=Lax` (or `None` if cross-site), and set `domain` if sharing across subdomains
-- Use cookies only for IDP user sessions (login/consent flows); use Bearer tokens for admin API access
-- Validate PKCE verifiers, client authentication, scopes, and all OAuth2.1/OIDC request parameters according to the spec
+### V1.4 — Session handling for the IDP
+
+Goal: separate browser auth from OAuth tokens.
+
+Deliverables:
+
+- secure cookie session model
+- login session persistence
+- logout flow
+- session lookup helpers
+- route protection for authenticated IDP pages
+- tests for login → session → logout
+
+### V1.5 — OAuth client model
+
+Goal: make the server able to represent real consumers.
+
+Deliverables:
+
+- clients table
+- redirect URIs
+- public vs confidential client shape
+- basic seed/script for creating clients
+- strong redirect URI validation rules
+- tests for invalid redirect URI cases
+
+### V1.6 — Authorization endpoint + PKCE
+
+Goal: first real OAuth slice.
+
+Deliverables:
+
+- `/authorize`
+- validate request parameters
+- require login before consent
+- require PKCE for public clients
+- issue authorization code
+- store auth code in DB
+- redirect back with code
+- tests for happy path + validation failures
+
+### V1.7 — Consent flow
+
+Goal: make the auth server behave like an actual provider.
+
+Deliverables:
+
+- consent screen
+- allow/deny action
+- store granted scopes with auth transaction
+- denial redirect behavior
+- tests for allow/deny paths
+
+### V1.8 — Token endpoint
+
+Goal: exchange auth code for tokens correctly.
+
+Deliverables:
+
+- `/token`
+- auth code exchange
+- PKCE verifier validation
+- code expiry + one-time use
+- issue access token
+- issue refresh token
+- persist token metadata
+- tests for invalid verifier / reused code / expired code
+
+### V1.9 — Refresh token rotation
+
+Goal: satisfy an important OAuth 2.1 expectation.
+
+Deliverables:
+
+- refresh token exchange
+- token rotation
+- replay detection / invalidation behavior
+- tests covering reuse and rotation rules
+
+### V1.10 — Minimal OIDC basics
+
+Goal: make the provider more broadly usable.
+
+Deliverables:
+
+- `id_token`
+- `/userinfo`
+- `/jwks.json`
+- `/.well-known/openid-configuration`
+- `jose`-based signing/verification
+- issuer + audience validation rules
+- tests for token claims and metadata responses
+
+### V1.11 — Deployable V1
+
+Goal: prove it works outside localhost.
+
+Deliverables:
+
+- VPS deployment notes
+- production env example
+- HTTPS / issuer configuration guidance
+- migration-on-deploy workflow
+- “sample hobby app client” smoke test
+
+---
+
+# V2 — Management, Convenience, and Hardening
+
+## V2 Goal
+
+Make the system easier to operate, inspect, and extend without expanding it into a huge platform too quickly.
+
+V2 is where convenience and operational visibility belong.
+
+## V2 Scope
+
+### Included
+
+- admin app
+- client management UX
+- user management UX
+- basic operational views
+- revocation / maintenance tooling
+- more security hardening
+- better DX and documentation
+
+### Possible later additions
+
+- MFA
+- audit/event views
+- token revocation endpoint
+- introspection endpoint
+- rate limiting / abuse protections
+- session inspection/revocation
+- nicer setup scripts / bootstrap tools
+
+### Still not required just because V2 exists
+
+- SAML
+- federation
+- dynamic client registration
+- PAR / Device Code / CIBA
+- multi-tenant platform concerns
+
+---
+
+## V2 PR-Sized Milestones
+
+### V2.1 — Admin scripts / CLI first
+
+Goal: avoid building UI before knowing what hurts.
+
+Deliverables:
+
+- scripts to create/update clients
+- scripts to inspect users
+- scripts to revoke tokens or sessions
+- seed helpers for local/dev environments
+
+### V2.2 — Admin app skeleton
+
+Goal: introduce management UI only after the data model is stable.
+
+Deliverables:
+
+- `apps/admin`
+- auth gate for admin users
+- basic layout/navigation
+- shared API client helpers
+
+### V2.3 — Client management UI
+
+Goal: remove DB/script friction for the most common admin task.
+
+Deliverables:
+
+- list clients
+- create/edit client
+- manage redirect URIs
+- manage scopes / client type
+- rotate client secrets where relevant
+
+### V2.4 — User management UI
+
+Goal: gain practical oversight.
+
+Deliverables:
+
+- list users
+- inspect user details
+- mark verified / disabled
+- optional password reset/admin actions
+
+### V2.5 — Token/session maintenance
+
+Goal: operational control.
+
+Deliverables:
+
+- revoke refresh tokens
+- inspect active sessions/tokens
+- optional simple revocation endpoint
+- clearer token lifecycle visibility
+
+### V2.6 — Hardening extras
+
+Goal: make the system sturdier for long-term hobby use.
+
+Deliverables:
+
+- security headers / cookie review
+- rate limiting strategy
+- abuse protections on auth endpoints
+- logging / tracing improvements
+- optional MFA design spike
+
+---
+
+## Security Baseline
+
+These should be treated as baseline expectations, especially by late V1:
+
+- Authorization Code + PKCE only
+- no implicit or hybrid flows
+- strict redirect URI matching
+- short-lived auth codes
+- one-time auth code use
+- refresh token rotation
+- secure cookie handling
+- signing keys exposed via JWKS
+- strong password hashing
+- issuer and audience validation
+- explicit scope validation
+
+---
 
 ## Testing Strategy
 
-- Unit: core-auth logic.
-- Integration: idp (Next.js) API routes with Supertest.
-- E2E: Playwright for auth flows.
-- DB matrix in CI: run tests on SQLite & Postgres.
+### V1
 
-## OAuth 2.1 Compliance Checklist
+- unit tests for auth domain logic
+- integration tests for Next.js route handlers
+- happy-path and failure-path tests for OAuth endpoints
+- database-backed tests against Postgres
 
-- [ ] Authorization Code + PKCE only
-- [ ] Disallow implicit/hybrid flows
-- [ ] Refresh token rotation
-- [ ] Redirect URI strict matching
-- [ ] Scope consent UX
-- [ ] Offline access for refresh
-- [ ] JWKS endpoint + rotation
-- [ ] Token revocation & introspection
-- [ ] Well-known metadata
-- [ ] MFA for sensitive scopes
+### V2
 
-## Example ENV
+- broader integration tests
+- UI tests for admin flows where worth it
+- end-to-end smoke tests across full login/consent/token flows
 
-### Local
+---
+
+## Example Environment
 
 ```ini
-DB_PROVIDER=sqlite
-DATABASE_URL=file:./dev.db
-ISSUER=http://localhost:3000
-COOKIE_SECRET=...
-SMTP_URL=console://
-IDP_PUBLIC_URL=https://idp.example.com
-ADMIN_PUBLIC_URL=https://admin.example.com
-```
-
-### Prod (Supabase)
-
-```ini
-DB_PROVIDER=postgresql
-DATABASE_URL=postgresql://...@db.supabase.co:5432/postgres
+DATABASE_URL=postgresql://...
 ISSUER=https://auth.example.com
 COOKIE_SECRET=...
-SMTP_URL=...
-TRUST_PROXY=1
-IDP_PUBLIC_URL=https://idp.example.com
-ADMIN_PUBLIC_URL=https://admin.example.com
+SMTP_URL=console://
+IDP_PUBLIC_URL=https://auth.example.com
 ```
 
-## CI/CD Notes
+For local development, use a local Postgres instance or a VPS-hosted development database.
 
-- Build with `turbo run build`
-- Deploy `apps/idp` (Next.js) — for example as a Docker image or directly on Vercel/Fly.io
-- Run `drizzle-kit migrate` on release to keep the database schema in sync
-- In CI, run the test matrix against both SQLite and Postgres (e.g. Supabase or testcontainers)
-- When deploying to Vercel serverless, use the Supabase Pooler DSN (port `6543`) to avoid exhausting database connections
+---
 
-## TL;DR Next Steps
+## Final Summary
 
-- Setup packages/db with Drizzle (sqliteTable + pgTable).
-- Next.js + custom OAuth2.1/OIDC implementation in `apps/idp`.
-- Next.js login/consent UI.
-- Get OAuth Code+PKCE flow working end-to-end.
-- Apply migrations to Supabase.
-- Add Admin app, MFA, and OAuth 2.1 refinements.
+### V1
+
+Build the **small serious auth server**:
+
+- Postgres
+- sessions
+- users
+- clients
+- Authorization Code + PKCE
+- refresh token rotation
+- optional but recommended OIDC basics
+
+### V2
+
+Build the **management and convenience layer**:
+
+- admin app
+- client/user management
+- token/session tooling
+- extra hardening and operational polish
+
+This keeps the project practical, serious, and finishable.
