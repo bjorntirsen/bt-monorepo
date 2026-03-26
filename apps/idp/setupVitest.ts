@@ -1,7 +1,26 @@
 import "@testing-library/jest-dom";
-import { config } from "dotenv";
-import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
+import { DatabaseSync } from "node:sqlite";
+import { fileURLToPath } from "node:url";
 
-config({ path: ".env.test" });
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, "../..");
+const dbFile = path.resolve(repoRoot, "packages/db/test.db");
 
-execSync("pnpm --filter @repo/db drizzle:migrate", { stdio: "inherit" });
+process.env.DB_FILE_NAME = dbFile;
+
+if (fs.existsSync(dbFile)) {
+  fs.rmSync(dbFile);
+}
+
+const sqlite = new DatabaseSync(dbFile);
+sqlite.exec(`
+  CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    verified INTEGER NOT NULL DEFAULT 0
+  );
+`);
+sqlite.close();
