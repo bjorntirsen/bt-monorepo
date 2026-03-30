@@ -14,6 +14,6 @@ jobs:
 
     steps:
       - name: Approve PR
-        uses: hmarr/auto-approve-action@v4
+        uses: hmarr/auto-approve-action@3cbcf8300c56a4c8c5431e35a5a1183d1f11d7b2 # v4.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
