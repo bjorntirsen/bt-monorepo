@@ -51,7 +51,7 @@ catalog:
   prettier: 3.8.1
   react: ^19.2.0
   react-dom: ^19.2.0
-  start-server-and-test: ^2.0.13
+  start-server-and-test: ^3.0.0
   tailwind-merge: 3.5.0
   tailwindcss: 4.2.2
   tailwindcss-animate: ^1.0.7
